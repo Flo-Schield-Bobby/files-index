@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8' />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+        <title>Files index</title>
+        {% block stylesheets %}
+            <link rel='stylesheet' href='{{ asset('assets/css/app.min.css') }}' />
+        {% endblock %}
+        <link rel='icon' href='{{ asset('favicon.ico') }}' />
+    </head>
+    <body>
+        {% block body %}
+            <section id='app'>
+                <div id='app-container' class='container'>{% block app_container %}{% endblock %}</div>
+                <div class='push'></div>
+            </section>
+        {% endblock %}
+    </body>
+</html>

@@ -1,0 +1,22 @@
+{
+    "authors": [
+        {
+            "name": "Florent SCHILDKNECHT",
+            "email": "florent.schildknecht@gmail.com"
+        }
+    ],
+    "require": {
+        "silex/silex": "~1.2",
+        "symfony/finder": "~2.6",
+        "twig/twig": "~1.18",
+        "monolog/monolog": "^1.13",
+        "mheap/silex-assetic": "^2.0",
+        "deralex/yaml-config-service-provider": "^1.0",
+        "entea/silex-twig-simple-asset-extension": "^1.0"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    }
+}
