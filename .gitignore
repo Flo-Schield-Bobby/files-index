@@ -15,6 +15,9 @@
 /web/bundles/
 /web/.htaccess
 /web/files
+/web/css
+/web/js
+/web/images
 
 # Ignore Silex set-up
 /silex
