@@ -1,6 +1,9 @@
 # OS X
 *.DS_Store
 
+# Vhost
+.htpasswd
+
 # Symfony
 /app/bootstrap.php.cache
 /app/cache/*
