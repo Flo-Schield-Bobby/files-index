@@ -1,0 +1,20 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin:base.html.twig' %}
+
+{% form_theme form 'FsbMediaFilesIndexBundle:Admin/Form:bootstrap.html.twig' %}
+
+{% block app_container %}
+    <h1>{% block entity_title %}{% endblock %}</h1>
+    <hr />
+    {% block form_new %}
+        <form {% block entity_create_path %}{% endblock %} method='post' {{ form_enctype(form) }}>
+            {% block form_content %}
+                {{ form_widget(form) }}
+            {% endblock %}
+            <div class='link-wrapper'>
+                <input class='btn btn-success' type='submit' name='submit' value='Créer' />
+                <input class='btn btn-warning' type='reset' name='reset' value='Annuler' />
+                <a class='btn btn-info' {% block entity_list_path %}{% endblock %}>Revenir à la liste</a>
+            </div>
+        </form>
+    {% endblock %}
+{% endblock %}

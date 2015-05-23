@@ -1,0 +1,13 @@
+@import "colors";
+
+$font-path: "../fonts";
+$fa-font-path: $font-path;
+$fa-css-prefix: "icon";
+
+@import "../bower_components/font-awesome/scss/font-awesome";
+
+html {
+    body {
+        padding-top: 70px;
+    }
+}

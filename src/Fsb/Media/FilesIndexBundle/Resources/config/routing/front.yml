@@ -1,0 +1,9 @@
+fsb_media_files_index_file_download_page:
+    path:     /get/{file}
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:download
+
+fsb_media_files_index_file_serve_page:
+    path:     /show/{file}
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:serve

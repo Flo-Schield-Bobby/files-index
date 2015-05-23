@@ -1,0 +1,25 @@
+fsb_media_files_index_admin:
+    resource: "@FsbMediaFilesIndexBundle/Resources/config/routing/admin.yml"
+    prefix: /admin
+
+fsb_media_files_index_front:
+    resource: "@FsbMediaFilesIndexBundle/Resources/config/routing/front.yml"
+    prefix: /
+
+fsb_media_files_index_homepage:
+    path:     /
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:index
+
+fsb_media_files_index_login:
+    path:   /login
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Front/Security/Authentication:login
+
+fsb_media_files_index_security_check:
+    path:   /login_check
+
+fsb_media_files_index_logout:
+    path:   /logout
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Front/Security/Authentication:logout

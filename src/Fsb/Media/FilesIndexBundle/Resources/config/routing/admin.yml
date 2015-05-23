@@ -1,0 +1,21 @@
+fsb_media_files_index_admin_homepage:
+    path:     /
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Admin/Pages/Home:index
+
+fsb_media_files_index_admin_login:
+    path:   /login
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Admin/Security/Authentication:login
+
+fsb_media_files_index_admin_security_check:
+    path:   /login_check
+
+fsb_media_files_index_admin_logout:
+    path:   /logout
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Admin/Security/Authentication:logout
+
+fsb_media_files_index_admin_crud_users:
+    resource: "@FsbMediaFilesIndexBundle/Resources/config/routing/crud/users.yml"
+    prefix:   /users

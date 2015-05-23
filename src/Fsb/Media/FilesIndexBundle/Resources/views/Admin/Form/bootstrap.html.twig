@@ -1,0 +1,189 @@
+{% block form_row %}
+{% spaceless %}
+    <div class='form-group'>
+        {{ form_label(form) }}
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_row %}
+
+{% block form_widget_simple %}
+{% spaceless %}
+    {% set type = type|default('text') %}
+    {% set cssClass = 'form-control' %}
+    {% if type == 'file' %}
+        {% set cssClass = '' %}
+    {% endif %}
+    {% set attr = attr|merge({ 'class': (attr.class|default('') ~ ' ' ~ cssClass)|trim }) %}
+    <input type='{{ type }}' {{ block('widget_attributes') }}{% if value is not empty %}value='{{ value }}' {% endif %} />
+{% endspaceless %}
+{% endblock form_widget_simple %}
+
+{% block form_widget_compound %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+        {% if form.parent is empty %}
+            {{ form_errors(form) }}
+        {% endif %}
+        {{ block('form_rows') }}
+        {{ form_rest(form) }}
+    </div>
+{% endspaceless %}
+{% endblock form_widget_compound %}
+
+{% block collection_widget %}
+{% spaceless %}
+    {% if prototype is defined %}
+        {% set attr = attr|merge({'data-prototype': form_row(prototype) }) %}
+    {% endif %}
+    {{ block('form_widget') }}
+{% endspaceless %}
+{% endblock collection_widget %}
+
+{% block textarea_widget %}
+{% spaceless %}
+    {% set attr = attr|merge({ 'class': (attr.class|default('') ~ ' form-control')|trim }) %}
+    <textarea {{ block('widget_attributes') }} rows='5'>{{ value }}</textarea>
+{% endspaceless %}
+{% endblock textarea_widget %}
+
+{% block choice_widget_expanded %}
+{% spaceless %}
+    <div {{ block('widget_container_attributes') }}>
+    {% for child in form %}
+        <div class='field-inline'>
+            {{ form_widget(child) }}
+            {{ form_label(child) }}
+        </div>
+    {% endfor %}
+    </div>
+{% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block choice_widget_collapsed %}
+{% spaceless %}
+    {% if required and empty_value is none and not empty_value_in_choices %}
+        {% set required = false %}
+    {% endif %}
+    <select class='form-control' {{ block('widget_attributes') }}{% if multiple %} multiple="multiple"{% endif %}>
+        {% if empty_value is not none %}
+            <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value|trans({}, translation_domain) }}</option>
+        {% endif %}
+        {% if preferred_choices|length > 0 %}
+            {% set options = preferred_choices %}
+            {{ block('choice_widget_options') }}
+            {% if choices|length > 0 and separator is not none %}
+                <option disabled="disabled">{{ separator }}</option>
+            {% endif %}
+        {% endif %}
+        {% set options = choices %}
+        {{ block('choice_widget_options') }}
+    </select>
+{% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block checkbox_widget %}
+{% spaceless %}
+    <input type='checkbox' {{ block('widget_attributes') }}{% if value is defined %} value='{{ value }}'{% endif %}{% if checked %} checked='checked'{% endif %} />
+{% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block radio_widget %}
+{% spaceless %}
+    <input type='radio' {{ block('widget_attributes') }}{% if value is defined %} value='{{ value }}'{% endif %}{% if checked %} checked='checked'{% endif %} />
+{% endspaceless %}
+{% endblock radio_widget %}
+
+{% block file_widget %}
+    <div class='input-group input-with-addon'>
+        <span class='input-group-btn'>
+            <button class='btn btn-primary btn-file' type='button'>Parcourir <input {{ block('widget_attributes') }} type='file' multiple=''{% if value is not empty %}value='{{ value }}' {% endif %} /></button>
+        </span>
+        <input type='text' class='form-control' readonly='' />
+    </div>
+{% endblock %}
+
+{% block datetime_row %}
+{% spaceless %}
+    <div class='form-group'>
+        {{ form_label(form) }}
+        <div class='input-group datetimepicker' data-date-format='DD-MM-YYYY hh:mm:ss'>
+            {{ form_widget(form) }}
+            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+        </div>
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock datetime_row %}
+
+{% block email_row %}
+{% spaceless %}
+    <div class='form-group'>
+        {{ form_label(form) }}
+        <div class='input-group'>
+            <span class='input-group-addon'>@</span>
+            {{ form_widget(form) }}
+        </div>
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock email_row %}
+
+{% block date_row %}
+{% spaceless %}
+    <div class='form-group'>
+        {{ form_label(form) }}
+        <div class='input-group datepicker' data-date-format='DD-MM-YYYY'>
+            {{ form_widget(form) }}
+            <span class='input-group-addon'><span class='glyphicon glyphicon-calendar'></span></span>
+        </div>
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock date_row %}
+
+{% block time_row %}
+{% spaceless %}
+    <div class='form-group'>
+        {{ form_label(form) }}
+        <div class='input-group timepicker' data-date-format='hh:mm:ss'>
+            {{ form_widget(form) }}
+            <span class='input-group-addon'><span class='glyphicon glyphicon-time'></span></span>
+        </div>
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock time_row %}
+
+{% block checkbox_row %}
+{% spaceless %}
+    <div class='form-group checkbox'>
+        {{ form_widget(form) }}
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block radio_row %}
+{% spaceless %}
+    <div class='form-group radio'>
+        {{ form_widget(form) }}
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block form_errors %}
+{% spaceless %}
+    {% if errors|length > 0 %}
+        <ul class='form-errors'>
+            {% for error in errors %}
+                <li class='form-error'>{{ error.message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endspaceless %}
+{% endblock form_errors %}

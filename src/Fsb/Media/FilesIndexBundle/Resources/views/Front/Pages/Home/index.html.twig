@@ -1,0 +1,45 @@
+{% extends 'FsbMediaFilesIndexBundle:Front:base.html.twig' %}
+
+{% block app_container %}
+    <h1>Partage de fichiers</h1>
+    <p>Visualisez ou télécharger ce que vous voulez !</p>
+    {% if files %}
+        <table class='table table-bordered table-stripped table-hover'>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Fichier</th>
+                    <th>Infos</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                    <tr>
+                        <td>
+                            {% if file.extension in ['jpeg', 'jpg', 'png', 'gif'] %}
+                                <span class='icon icon-2x icon-file-picture-o'></span>
+                            {% elseif file.extension in ['mp4', 'ogv', 'webm', 'avi', 'mkv'] %}
+                                <span class='icon icon-2x icon-file-movie-o'></span>
+                            {% elseif file.extension in ['mp3', 'aac', 'wav', 'ogg'] %}
+                                <span class='icon icon-2x icon-file-audio-o'></span>
+                            {% elseif file.extension in ['rar', 'zip', 'tar.gz', 'gz'] %}
+                                <span class='icon icon-2x icon-file-zip-o'></span>
+                            {% else %}
+                                <span class='icon icon-2x icon-file-o'></span>
+                            {% endif %}
+                        </td>
+                        <td>{{ file.filename }}</td>
+                        <td>Fichier {{ file.extension|upper }} - {{ (file.size / 1000)|number_format(0, '.', '') }} Mo</td>
+                        <td>
+                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_serve_page', { file: file.filename }) }}' title='prévisualiser' target='_blank'><span class='icon icon-2x icon-eye'></span></a>
+                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_download_page', { file: file.filename }) }}' title='télécharger' target='_blank'><span class='icon icon-2x icon-download'></span></a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class='alert-danger'>{{ error }}</p>
+    {% endif %}
+{% endblock %}

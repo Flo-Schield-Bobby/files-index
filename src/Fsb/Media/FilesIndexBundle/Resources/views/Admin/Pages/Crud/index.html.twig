@@ -1,0 +1,28 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin:base.html.twig' %}
+
+{% block app_container %}
+    <h1>{% block entity_title %}{% endblock %}</h1>
+    <hr />
+    {% block entity_add_link %}
+        <div class='link-wrapper'>
+            <a class='btn btn-info' {% block entity_add_path %}{% endblock %}>{% block entity_add_label %}{% endblock %}</a>
+        </div>
+    {% endblock %}
+    {% block extra_before_list %}{% endblock %}
+    <table class='records_list table table-bordered table-condensed table-stripped table-hover table-sorted'>
+        <thead>
+            <tr>
+                {% block entity_table_headers %}{% endblock %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for entity in entities %}
+            <tr>
+                {% block entity_table_content %}{% endblock %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% block extra_after_list %}{% endblock %}
+    {{ block('entity_add_link') }}
+{% endblock %}

@@ -1,0 +1,4 @@
+services:
+#    fsb_media_files_index.example:
+#        class: Fsb\Media\FilesIndexBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

@@ -1,0 +1,40 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin/Pages/Crud:show.html.twig' %}
+
+{% block entity_title %}User{% endblock %}
+
+{% block entity_table %}
+    <tr>
+        <th>Id</th>
+        <td>{{ entity.id }}</td>
+    </tr>
+    <tr>
+        <th>Created At</th>
+        <td>{{ entity.createdAt|date('d-m-Y H:i:s') }}</td>
+    </tr>
+    <tr>
+        <th>Updated At</th>
+        <td>{{ entity.updatedAt|date('d-m-Y H:i:s') }}</td>
+    </tr>
+    <tr class='{% if entity.isActive %}text-info{% else %}text-muted{% endif %}'>
+        <th>Active ?</th>
+        <td>{% if entity.isActive %}Yes{% else %}No{% endif %}</td>
+    </tr>
+    <tr>
+        <th>Username</th>
+        <td>{{ entity.username }}</td>
+    </tr>
+    <tr>
+        <th>Root Folder</th>
+        <td>{{ entity.rootFolder }}</td>
+    </tr>
+{% endblock %}
+
+{% block entity_activate_path %}href="{{ path('fsb_media_files_index_admin_crud_user_activate', { 'id': entity.id }) }}"{% endblock %}
+
+{% block entity_unactivate_path %}href="{{ path('fsb_media_files_index_admin_crud_user_unactivate', { 'id': entity.id }) }}"{% endblock %}
+
+{% block entity_list_path %}href="{{ path('fsb_media_files_index_admin_crud_users') }}"{% endblock %}
+
+{% block entity_edit_path %}href="{{ path('fsb_media_files_index_admin_crud_user_edit', { 'id': entity.id }) }}"{% endblock %}
+
+{% block entity_delete_path %}action="{{ path('fsb_media_files_index_admin_crud_user_remove', { 'id': entity.id }) }}"{% endblock %}

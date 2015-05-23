@@ -1,0 +1,59 @@
+fsb_media_files_index_admin_crud_users:
+    path:     /
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:index"
+    methods:  GET
+
+fsb_media_files_index_admin_crud_user_show:
+    path:     /{id}/show
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:show"
+    methods:  GET
+
+fsb_media_files_index_admin_crud_user_new:
+    path:     /new
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:new"
+    methods:  GET
+
+fsb_media_files_index_admin_crud_user_create:
+    path:     /create
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:create"
+    methods:  POST
+
+fsb_media_files_index_admin_crud_user_activate:
+    path:     /{id}/activate
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:activate"
+    methods:  GET
+
+fsb_media_files_index_admin_crud_user_unactivate:
+    path:     /{id}/unactivate
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:unactivate"
+    methods:  GET
+
+fsb_media_files_index_admin_crud_user_edit:
+    path:     /{id}/edit
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:edit"
+    methods:  GET
+
+fsb_media_files_index_admin_crud_user_update:
+    path:     /{id}/update
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:update"
+    methods:  [POST, PUT]
+
+fsb_media_files_index_admin_crud_user_remove:
+    path:     /{id}/remove
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:remove"
+    methods:  [POST, DELETE]
+
+fsb_media_files_index_admin_crud_user_delete:
+    path:     /{id}/delete
+    defaults:
+        _controller: "FsbMediaFilesIndexBundle:Admin/Pages/Crud/User:delete"
+    methods:  [POST, DELETE]

@@ -1,0 +1,7 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin/Pages/Crud:new.html.twig' %}
+
+{% block entity_title %}Add a user{% endblock %}
+
+{% block entity_create_path %}action='{{ path('fsb_media_files_index_admin_crud_user_create') }}'{% endblock %}
+
+{% block entity_list_path %}href='{{ path('fsb_media_files_index_admin_crud_users') }}'{% endblock %}

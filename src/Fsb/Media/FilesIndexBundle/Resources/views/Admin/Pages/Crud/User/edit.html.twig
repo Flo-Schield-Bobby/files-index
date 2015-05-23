@@ -1,0 +1,11 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin/Pages/Crud:edit.html.twig' %}
+
+{% block entity_title %}Edit a user{% endblock %}
+
+{% block entity_update_path %}action='{{ path('fsb_media_files_index_admin_crud_user_update', { 'id': entity.id }) }}'{% endblock %}
+
+{% block entity_list_path %}href='{{ path('fsb_media_files_index_admin_crud_users') }}'{% endblock %}
+
+{% block entity_show_path %}href='{{ path('fsb_media_files_index_admin_crud_user_show', { 'id': entity.id }) }}'{% endblock %}
+
+{% block entity_delete_path %}action='{{ path('fsb_media_files_index_admin_crud_user_remove', { 'id': entity.id }) }}'{% endblock %}

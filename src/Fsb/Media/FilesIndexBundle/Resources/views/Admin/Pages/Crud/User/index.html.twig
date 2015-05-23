@@ -1,0 +1,33 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin/Pages/Crud:index.html.twig' %}
+
+{% block entity_title %}Users{% endblock %}
+
+{% block entity_add_path %}href='{{ path('fsb_media_files_index_admin_crud_user_new') }}'{% endblock %}
+
+{% block entity_add_label %}Add a user{% endblock %}
+
+{% block entity_table_headers %}
+    <th>Active ?</th>
+    <th>Username</th>
+    <th>Root Folder</th>
+    <th>Actions</th>
+{% endblock %}
+
+{% block entity_table_content %}
+    {% if entity.isActive %}
+        <td class='text-success'>Active</td>
+    {% else %}
+        <td class='text-muted'>Hidden</td>
+    {% endif %}
+    <td>{{ entity.username }}</td>
+    <td>{{ entity.rootFolder }}</td>
+    <td>
+        <div><a href='{{ path('fsb_media_files_index_admin_crud_user_show', { 'id': entity.id }) }}'>Detail</a></div>
+        <div><a href='{{ path('fsb_media_files_index_admin_crud_user_edit', { 'id': entity.id }) }}'>Edit</a></div>
+        {% if entity.isActive %}
+            <div><a href='{{ path('fsb_media_files_index_admin_crud_user_unactivate', { 'id': entity.id }) }}'>Unactivate</a></div>
+        {% else %}
+            <div><a href='{{ path('fsb_media_files_index_admin_crud_user_activate', { 'id': entity.id }) }}'>Activate</a></div>
+        {% endif %}
+    </td>
+{% endblock %}

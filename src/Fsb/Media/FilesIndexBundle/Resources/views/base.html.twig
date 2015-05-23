@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8' />
+        <meta name='viewport' content='width=device-width, initial-scale=1.0' />
+        <title>Files index</title>
+        {% block stylesheets %}
+            {% stylesheets
+                'bundles/fsbmediafilesindex/css/bootstrap.min.css'
+                'bundles/fsbmediafilesindex/bower_components/bootstrap-material-design/dist/css/material-fullpalette.min.css'
+                'bundles/fsbmediafilesindex/bower_components/bootstrap-material-design/dist/css/ripples.min.css'
+                'bundles/fsbmediafilesindex/bower_components/bootstrap-material-design/dist/css/roboto.min.css'
+                'bundles/fsbmediafilesindex/css/app.min.css'
+                output='css/app.min.css' %}
+                <link rel='stylesheet' href='{{ asset_url }}' />
+            {% endstylesheets %}
+        {% endblock %}
+        <link rel='icon' href='{{ asset('favicon.ico') }}' />
+    </head>
+    <body>
+        {% block body %}{% endblock %}
+        {% block javascripts %}
+            {% javascripts
+                'bundles/fsbmediafilesindex/bower_components/jquery/dist/jquery.min.js'
+                'bundles/fsbmediafilesindex/bower_components/bootstrap-sass/assets/javascripts/bootstrap.min.js'
+                'bundles/fsbmediafilesindex/bower_components/bootstrap-material-design/dist/js/material.min.js'
+                'bundles/fsbmediafilesindex/bower_components/bootstrap-material-design/dist/js/ripples.min.js'
+                'bundles/fsbmediafilesindex/js/app.min.js'
+                output='js/app.min.js' %}
+                <script src='{{ asset_url }}'></script>
+            {% endjavascripts %}
+        {% endblock %}
+    </body>
+</html>

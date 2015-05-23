@@ -1,0 +1,71 @@
+{% extends 'FsbMediaFilesIndexBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {% stylesheets
+        'bundles/fsbmediafilesindex/css/admin.min.css'
+        output='css/admin.min.css' %}
+        <link rel='stylesheet' href='{{ asset_url }}' />
+    {% endstylesheets %}
+{% endblock %}
+
+{% block body %}
+    <nav class='navbar navbar-admin navbar-default navbar-fixed-top' role='navigation'>
+        <div class='container'>
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class='navbar-header'>
+                <button type='button' class='navbar-toggle' data-toggle='collapse' data-target='#nav-content'>
+                    <span class='sr-only'>Navigation</span>
+                    <span class='icon-bar'></span>
+                    <span class='icon-bar'></span>
+                    <span class='icon-bar'></span>
+                </button>
+                <a class='navbar-brand' href='{{ path('fsb_media_files_index_admin_homepage') }}'>Media - Files</a>
+            </div>
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class='collapse navbar-collapse' id='nav-content'>
+                {% block admin_nav_content %}
+                    <ul class='nav navbar-nav'>
+                        <li class='dropdown'>
+                            <a href='#' class='dropdown-toggle' data-toggle='dropdown'>Users <span class='caret'></span></a>
+                            <ul class='dropdown-menu' role='menu'>
+                                <li><a href='{{ path('fsb_media_files_index_admin_crud_users') }}'>List</a></li>
+                                <li><a href='{{ path('fsb_media_files_index_admin_crud_user_new') }}'>Add</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    {% block logout_link %}
+                        <ul class='nav navbar-nav navbar-right'>
+                            <li>
+                                <a href='{{ path('fsb_media_files_index_admin_logout') }}'><span class='mdi-navigation-close'></span></a>
+                            </li>
+                        </ul>
+                    {% endblock %}
+                {% endblock %}
+            </div>
+        </div>
+    </nav>
+    <main id='app-container'>
+        <section class='container'>
+            {% for type, messages in app.session.flashbag.all %}
+                {% for message in messages %}
+                    <div class='alert alert-{{ type }} alert-dismissable'>
+                        <a href='#' class='close' data-dismiss='alert' aria-hidden='true'>&times;</a>
+                        <strong>{{ type }}!</strong><span> {{ message }}</span>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+            {% block app_container %}{% endblock %}
+        </section>
+        {% block modals %}{% endblock %}
+    </main>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts
+        'bundles/fsbmediafilesindex/js/admin.min.js'
+        output='js/admin.min.js' %}
+        <script src='{{ asset_url }}'></script>
+    {% endjavascripts %}
+{% endblock %}

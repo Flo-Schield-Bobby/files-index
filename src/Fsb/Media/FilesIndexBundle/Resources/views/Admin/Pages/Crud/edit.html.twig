@@ -1,0 +1,48 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin:base.html.twig' %}
+
+{% form_theme edit_form 'FsbMediaFilesIndexBundle:Admin/Form:bootstrap.html.twig' %}
+
+{% block app_container %}
+    <h1>{% block entity_title %}{% endblock %}</h1>
+    <hr />
+    {% block form_edit %}
+        <form {% block entity_update_path %}{% endblock %} method='post' {{ form_enctype(edit_form) }}>
+            {% block form_content %}
+                {{ form_widget(edit_form) }}
+            {% endblock %}
+            <div class='link-wrapper'>
+                <input class='btn btn-success' type='submit' name='submit' value='Editer' />
+                <input class='btn btn-warning' type='reset' name='reset' value='Annuler' />
+            </div>
+        </form>
+    {% endblock %}
+    <div class='link-wrapper'>
+        {% block entity_list_link %}
+            <a class='btn btn-info' {% block entity_list_path %}{% endblock %}>Revenir à la liste</a>
+        {% endblock %}
+        <a class='btn btn-info' {% block entity_show_path %}{% endblock %}>Détail</a>
+        {% block entity_delete_form %}
+            <form id='delete-form' {% block entity_delete_path %}{% endblock %} class='inline-block' method='post'>
+                {{ form_widget(delete_form) }}
+                <a href='#confirmation-modal' data-toggle='modal' class='btn btn-warning'>Supprimer</a>
+            </form>
+        {% endblock %}
+    </div>
+    <div class='modal fade' id='confirmation-modal' tabindex='-1' role='dialog' aria-labelledby='myModalLabel' aria-hidden='true'>
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>&times;</button>
+                    <h4 class='modal-title' id='myModalLabel'>Confirmation</h4>
+                </div>
+                <div class='modal-body'>
+                    <p>C'est votre dernier mot ?</p>
+                </div>
+                <div class='modal-footer'>
+                    <button type='button' class='btn btn-default' data-dismiss='modal'>Annuler</button>
+                    <button type='button' class='btn btn-primary confirmation-modal-submit' data-form='#delete-form' data-dismiss='modal'>Confirmer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

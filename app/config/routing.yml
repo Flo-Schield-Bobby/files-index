@@ -1,3 +1,7 @@
+fsb_media_files_index:
+    resource: "@FsbMediaFilesIndexBundle/Resources/config/routing.yml"
+    prefix:   /
+
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation

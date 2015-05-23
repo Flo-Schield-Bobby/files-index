@@ -13,6 +13,8 @@
 /composer.phar
 /vendor/
 /web/bundles/
+/web/.htaccess
+/web/files
 
 # Ignore Silex set-up
 /silex
