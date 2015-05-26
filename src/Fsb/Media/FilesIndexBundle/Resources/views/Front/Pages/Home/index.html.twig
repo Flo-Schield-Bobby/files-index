@@ -2,7 +2,7 @@
 
 {% block app_container %}
     <h1>Partage de fichiers</h1>
-    <p>Visualisez ou télécharger ce que vous voulez !</p>
+    <p>Visualisez ou téléchargez ce que vous voulez !</p>
     {% if files %}
         <table class='table table-bordered table-stripped'>
             <thead>
@@ -34,7 +34,7 @@
                         <td>Fichier {{ file.extension|upper }} - {{ (file.size / 1000)|number_format(0, '.', '') }} Mo</td>
                         <td>
                             <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' title='prévisualiser' target='_blank'><span class='icon icon-2x icon-eye'></span></a>
-                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}' title='télécharger' target='_blank'><span class='icon icon-2x icon-download'></span></a>
+                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}' title='télécharger'><span class='icon icon-2x icon-download'></span></a>
                         </td>
                     </tr>
                 {% endfor %}
@@ -47,7 +47,7 @@
                         <td>Fichier {{ file.extension }} - {{ file.size }} Mo</td>
                         <td>
                             <a class='btn btn-sm btn-theme-3' href='{{ file.previewLink }}' target='_blank' title='prévisualiser' data-toggle='tooltip' data-placement='bottom'><span class='icon icon-2x icon-eye'></span></a>
-                            <a class='btn btn-sm btn-theme-3' href='{{ file.downloadLink }}' target='_blank' title='télécharger' data-toggle='tooltip' data-placement='bottom' data-original-title='télécharger'><span class='icon icon-2x icon-download'></span></a>
+                            <a class='btn btn-sm btn-theme-3' href='{{ file.downloadLink }}' title='télécharger' data-toggle='tooltip' data-placement='bottom' data-original-title='télécharger'><span class='icon icon-2x icon-download'></span></a>
                         </td>
                     </tr>
                 {% endraw %}
