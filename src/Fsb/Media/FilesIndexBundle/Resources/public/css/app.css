@@ -2372,4 +2372,87 @@
 
 html body {
   padding-top: 70px;
+  background: #004358;
+  color: #ffe11a;
+}
+html body [v-cloak] {
+  display: none;
+}
+html body h1,
+html body h2,
+html body h3,
+html body h4,
+html body h5,
+html body h6 {
+  color: #bedb39;
+}
+html body .navbar.navbar-index {
+  background: #bedb39;
+  color: #1f8a70;
+}
+html body .navbar.navbar-index .navbar-form .form-control {
+  background-image: #c9e15c;
+  /* do not group these rules */
+}
+html body .navbar.navbar-index .navbar-form .form-control:focus {
+  background-image: -webkit-linear-gradient(#aac724, #aac724), -webkit-linear-gradient(#c9e15c, #c9e15c);
+  background-image: -moz-linear-gradient(#aac724, #aac724), -moz-linear-gradient(#c9e15c, #c9e15c);
+  background-image: linear-gradient(#aac724, #aac724), linear-gradient(#c9e15c, #c9e15c);
+}
+html body .navbar.navbar-index .navbar-form .form-control::-webkit-input-placeholder {
+  color: #119877;
+}
+html body .navbar.navbar-index .navbar-form .form-control:-moz-placeholder {
+  /* FF 4-18 */
+  color: #b1d026;
+}
+html body .navbar.navbar-index .navbar-form .form-control::-moz-placeholder {
+  /* FF 19+ */
+  color: #b1d026;
+}
+html body .navbar.navbar-index .navbar-form .form-control:-ms-input-placeholder {
+  /* IE 10+ */
+  color: #b1d026;
+}
+html body .btn.btn-marine, html body .btn.btn-marine:not(.btn-link):not(.btn-flat) {
+  background-color: #004358;
+}
+html body .btn.btn-marine .icon, html body .btn.btn-marine:not(.btn-link):not(.btn-flat) .icon {
+  color: white;
+}
+html body .btn.btn-flat-grass, html body .btn.btn-flat-grass:not(.btn-link):not(.btn-flat) {
+  background-color: #1f8a70;
+}
+html body .btn.btn-flat-grass .icon, html body .btn.btn-flat-grass:not(.btn-link):not(.btn-flat) .icon {
+  color: white;
+}
+html body .btn.btn-spring, html body .btn.btn-spring:not(.btn-link):not(.btn-flat) {
+  background-color: #bedb39;
+}
+html body .btn.btn-sunshine, html body .btn.btn-sunshine:not(.btn-link):not(.btn-flat) {
+  background-color: #ffe11a;
+}
+html body .btn.btn-brick, html body .btn.btn-brick:not(.btn-link):not(.btn-flat) {
+  background-color: #fd7400;
+}
+html body .btn.btn-brick .icon, html body .btn.btn-brick:not(.btn-link):not(.btn-flat) .icon {
+  color: white;
+}
+html body .form-control {
+  color: inherit;
+}
+html body #files-list {
+  opacity: 0;
+  -webkit-transition: all 0.33s ease-out;
+     -moz-transition: all 0.33s ease-out;
+          transition: all 0.33s ease-out;
+}
+html body #files-list .file:hover {
+  -webkit-transition: all 0.33s ease-out;
+     -moz-transition: all 0.33s ease-out;
+          transition: all 0.33s ease-out;
+  background: #003344;
+}
+html body #files-list.compiled {
+  opacity: 1;
 }

@@ -4,7 +4,7 @@
     <h1>Partage de fichiers</h1>
     <p>Visualisez ou télécharger ce que vous voulez !</p>
     {% if files %}
-        <table class='table table-bordered table-stripped table-hover'>
+        <table class='table table-bordered table-stripped'>
             <thead>
                 <tr>
                     <th>Type</th>
@@ -13,21 +13,22 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id='files-list'>
                 {% for file in files %}
-                    <tr>
+                    {% if file.extension in ['jpeg', 'jpg', 'png', 'gif'] %}
+                        {% set iconClass = 'icon-file-picture-o' %}
+                    {% elseif file.extension in ['mp4', 'ogv', 'webm', 'avi', 'mkv'] %}
+                        {% set iconClass = 'icon-file-movie-o' %}
+                    {% elseif file.extension in ['mp3', 'aac', 'wav', 'ogg'] %}
+                        {% set iconClass = 'icon-file-audio-o' %}
+                    {% elseif file.extension in ['rar', 'zip', 'tar.gz', 'gz'] %}
+                        {% set iconClass = 'icon-file-zip-o' %}
+                    {% else %}
+                        {% set iconClass = 'icon-file-o' %}
+                    {% endif %}
+                    <tr class='file static' data-filename='{{ file.filename }}' data-extension='{{ file.extension|upper }}' data-filesize='{{ (file.size / 1000)|number_format(0, '.', '') }}' data-icon-class='{{ iconClass }}' data-preview-link='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' data-download-link='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}'>
                         <td>
-                            {% if file.extension in ['jpeg', 'jpg', 'png', 'gif'] %}
-                                <span class='icon icon-2x icon-file-picture-o'></span>
-                            {% elseif file.extension in ['mp4', 'ogv', 'webm', 'avi', 'mkv'] %}
-                                <span class='icon icon-2x icon-file-movie-o'></span>
-                            {% elseif file.extension in ['mp3', 'aac', 'wav', 'ogg'] %}
-                                <span class='icon icon-2x icon-file-audio-o'></span>
-                            {% elseif file.extension in ['rar', 'zip', 'tar.gz', 'gz'] %}
-                                <span class='icon icon-2x icon-file-zip-o'></span>
-                            {% else %}
-                                <span class='icon icon-2x icon-file-o'></span>
-                            {% endif %}
+                            <span class='icon icon-2x {{ iconClass }}'></span>
                         </td>
                         <td>{{ file.filename }}</td>
                         <td>Fichier {{ file.extension|upper }} - {{ (file.size / 1000)|number_format(0, '.', '') }} Mo</td>
@@ -37,9 +38,31 @@
                         </td>
                     </tr>
                 {% endfor %}
+                {% raw %}
+                    <tr class='file' v-repeat='file: files | filterBy query' v-cloak>
+                        <td>
+                            <span class='icon icon-2x {{ file.iconClass }}'></span>
+                        </td>
+                        <td>{{ file.name }}</td>
+                        <td>Fichier {{ file.extension }} - {{ file.size }} Mo</td>
+                        <td>
+                            <a class='btn btn-sm btn-spring' href='{{ file.previewLink }}' target='_blank' title='prévisualiser' data-toggle='tooltip' data-placement='bottom'><span class='icon icon-2x icon-eye'></span></a>
+                            <a class='btn btn-sm btn-spring' href='{{ file.downloadLink }}' target='_blank' title='télécharger' data-toggle='tooltip' data-placement='bottom' data-original-title='télécharger'><span class='icon icon-2x icon-download'></span></a>
+                        </td>
+                    </tr>
+                {% endraw %}
             </tbody>
         </table>
     {% else %}
         <p class='alert-danger'>{{ error }}</p>
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts
+        'bundles/fsbmediafilesindex/bower_components/vue/dist/vue.min.js'
+        'bundles/fsbmediafilesindex/js/filtrable-list.js'
+        output='js/home.min.js' %}
+        <script src='{{ asset_url }}'></script>
+    {% endjavascripts %}
 {% endblock %}

@@ -1,0 +1,27 @@
+// Vitamic-C Kuler theme
+// 
+// Home page : https://color.adobe.com/Vitamin-C-color-theme-492199
+// Credits © Maria Groenlund https://color.adobe.com/userId%3A117768-art-colors/
+
+$theme-vitamin-c-marine: rgb(0, 67, 88);
+$theme-vitamin-c-flat-grass: rgb(31, 138, 112);
+$theme-vitamin-c-spring: rgb(190, 219, 57);
+$theme-vitamin-c-sunshine: rgb(255, 225, 26);
+$theme-vitamin-c-brick: rgb(253, 116, 0);
+
+//
+// UI elements
+//
+
+$body-background: $theme-vitamin-c-marine;
+$titles-color: $theme-vitamin-c-spring;
+$text-color: $theme-vitamin-c-sunshine;
+
+$navbar-background: $theme-vitamin-c-spring;
+$navbar-color: $theme-vitamin-c-flat-grass;
+
+$btn-marine-background: $theme-vitamin-c-marine;
+$btn-flat-grass-background: $theme-vitamin-c-flat-grass;
+$btn-spring-background: $theme-vitamin-c-spring;
+$btn-sunshine-background: $theme-vitamin-c-sunshine;
+$btn-brick-background: $theme-vitamin-c-brick;

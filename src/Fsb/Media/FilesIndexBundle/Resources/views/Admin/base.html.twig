@@ -20,7 +20,7 @@
                     <span class='icon-bar'></span>
                     <span class='icon-bar'></span>
                 </button>
-                <a class='navbar-brand' href='{{ path('fsb_media_files_index_admin_homepage') }}'>Media - Files</a>
+                <a class='navbar-brand' href='{{ path('fsb_media_files_index_admin_homepage') }}'><span class='icon icon-files-o'></span> Media - Files</a>
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class='collapse navbar-collapse' id='nav-content'>
@@ -37,7 +37,7 @@
                     {% block logout_link %}
                         <ul class='nav navbar-nav navbar-right'>
                             <li>
-                                <a href='{{ path('fsb_media_files_index_admin_logout') }}'><span class='mdi-navigation-close'></span></a>
+                                <a href='{{ path('fsb_media_files_index_admin_logout') }}'><span class='icon icon-power-off'></span></a>
                             </li>
                         </ul>
                     {% endblock %}
