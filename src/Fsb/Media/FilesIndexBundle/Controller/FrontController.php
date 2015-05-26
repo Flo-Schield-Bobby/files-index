@@ -6,8 +6,6 @@ use DateTime;
 use SplFileInfo;
 use SplFileObject;
 
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -21,17 +19,18 @@ class FrontController extends Controller
 
     protected function downloadFile($filepath, $filename, $notFoundMessage = 'File not found')
     {
-        $response = new Response();
 
         if (!$this->checkFilePath($filepath)) {
             throw $this->createNotFoundException($notFoundMessage);
         }
 
         $infos = new SplFileInfo($filepath);
-        $file = $infos->openFile('r');
-
         $filesize = $infos->getSize();
         $downloadedName = $filename;
+
+        $response = new BinaryFileResponse($filepath);
+        // Apache X-Sendfile header
+        $response->trustXSendfileTypeHeader();
 
         session_write_close();
 
@@ -55,23 +54,11 @@ class FrontController extends Controller
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-Length', $filesize);
 
-        $response->sendHeaders();
-
-        // Set Content --- Memory Leak here...
-        $content = '';
-        while (!$file->eof()) {
-            $content .= $file->fread($this->chunkSize);
-        }
-        $response->setContent($content);
-
-        // Close the file handler
-        $file = null;
-
         // ETag
         $response->setETag(md5($response->getContent()));
         $response->isNotModified($this->getRequest());
 
-        $response->sendContent();
+        return $response;
     }
 
     protected function serveFile($filepath)
