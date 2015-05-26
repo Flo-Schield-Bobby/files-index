@@ -47,10 +47,7 @@ class FrontController extends Controller
         $response->setMaxAge($this->cacheValidity);
         $response->setSharedMaxAge($this->cacheValidity);
 
-        $disposition = $response->headers->makeDisposition(
-            ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $downloadedName
-        );
+        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
 
         $response->headers->set('Content-Description', 'File Transfer');
         $response->headers->set('Content-Type', 'application/force-download');
@@ -92,6 +89,7 @@ class FrontController extends Controller
 
     protected function streamFile($file)
     {
+        $request = $this->getRequest();
         $response = new StreamedResponse();
 
         $response->setCallback(function () use ($file) {
@@ -103,6 +101,16 @@ class FrontController extends Controller
             // Close the file handler
             $file = null;
         });
+
+        $contentDisposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $file->getFilename());
+
+        $response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Transfer-Encoding', 'binary;');
+        $response->headers->set('Content-Disposition', $contentDisposition);
+        $response->headers->set('Content-Length', $file->getSize());
+
+        $response->prepare($request);
 
         return $response;
     }
