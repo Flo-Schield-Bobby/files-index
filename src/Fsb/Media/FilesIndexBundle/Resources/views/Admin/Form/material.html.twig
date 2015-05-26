@@ -1,0 +1,40 @@
+{% extends 'FsbMediaFilesIndexBundle:Admin/Form:bootstrap.html.twig' %}
+
+{% block checkbox_widget %}
+{% spaceless %}
+    <input type='checkbox' {{ block('widget_attributes') }}{% if value is defined %} value='{{ value }}'{% endif %}{% if checked %} checked='checked'{% endif %} />
+    <span class='toggle'></span>
+{% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block checkbox_row %}
+{% spaceless %}
+    <div class='form-group checkbox'>
+        <label>
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+            {{ label|trans({}, translation_domain) }}
+        </label>
+    </div>
+{% endspaceless %}
+{% endblock %}
+
+{% block radio_widget %}
+{% spaceless %}
+    <input type='checkbox' {{ block('widget_attributes') }}{% if value is defined %} value='{{ value }}'{% endif %}{% if checked %} checked='checked'{% endif %} />
+    <span class='circle'></span>
+    <span class='check'></span>
+{% endspaceless %}
+{% endblock radio_widget %}
+
+{% block radio_row %}
+{% spaceless %}
+    <div class='form-group radio'>
+        <label>
+            {{ form_widget(form) }}
+            {{ form_errors(form) }}
+            {{ label|trans({}, translation_domain) }}
+        </label>
+    </div>
+{% endspaceless %}
+{% endblock %}
