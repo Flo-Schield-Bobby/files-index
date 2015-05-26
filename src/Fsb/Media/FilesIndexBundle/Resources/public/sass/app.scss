@@ -53,37 +53,37 @@ html {
             }
         }
         .btn {
-            &.btn-marine,
-            &.btn-marine:not(.btn-link):not(.btn-flat) {
-                background-color: $btn-marine-background;
+            &.btn-theme-1,
+            &.btn-theme-1:not(.btn-link):not(.btn-flat) {
+                background-color: $btn-theme-1-background;
                 .icon {
                     color: white;
                 }
             }
-            &.btn-flat-grass,
-            &.btn-flat-grass:not(.btn-link):not(.btn-flat) {
-                background-color: $btn-flat-grass-background;
+            &.btn-theme-2,
+            &.btn-theme-2:not(.btn-link):not(.btn-flat) {
+                background-color: $btn-theme-2-background;
                 .icon {
                     color: white;
                 }
             }
-            &.btn-spring,
-            &.btn-spring:not(.btn-link):not(.btn-flat) {
-                background-color: $btn-spring-background;
+            &.btn-theme-3,
+            &.btn-theme-3:not(.btn-link):not(.btn-flat) {
+                background-color: $btn-theme-3-background;
                 .icon {
                     // color: white;
                 }
             }
-            &.btn-sunshine,
-            &.btn-sunshine:not(.btn-link):not(.btn-flat) {
-                background-color: $btn-sunshine-background;
+            &.btn-theme-4,
+            &.btn-theme-4:not(.btn-link):not(.btn-flat) {
+                background-color: $btn-theme-4-background;
                 .icon {
                     // color: white;
                 }
             }
-            &.btn-brick,
-            &.btn-brick:not(.btn-link):not(.btn-flat) {
-                background-color: $btn-brick-background;
+            &.btn-theme-5,
+            &.btn-theme-5:not(.btn-link):not(.btn-flat) {
+                background-color: $btn-theme-5-background;
                 .icon {
                     color: white;
                 }

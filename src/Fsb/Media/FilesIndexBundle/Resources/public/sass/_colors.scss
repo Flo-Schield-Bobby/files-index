@@ -1,27 +1,27 @@
-// Vitamic-C Kuler theme
+// Sandy Stone Kuler theme
 // 
-// Home page : https://color.adobe.com/Vitamin-C-color-theme-492199
-// Credits © Maria Groenlund https://color.adobe.com/userId%3A117768-art-colors/
+// Home page : https://color.adobe.com/sandy-stone-beach-ocean-diver-color-theme-15325
+// Credits © PS https://color.adobe.com/userId%3A17923-art-colors/
 
-$theme-vitamin-c-marine: rgb(0, 67, 88);
-$theme-vitamin-c-flat-grass: rgb(31, 138, 112);
-$theme-vitamin-c-spring: rgb(190, 219, 57);
-$theme-vitamin-c-sunshine: rgb(255, 225, 26);
-$theme-vitamin-c-brick: rgb(253, 116, 0);
+$theme-sandy-stone-1: rgb(230, 226, 175);
+$theme-sandy-stone-2: rgb(167, 163, 126);
+$theme-sandy-stone-3: rgb(239, 236, 202);
+$theme-sandy-stone-4: rgb(4, 99, 128);
+$theme-sandy-stone-5: rgb(0, 47, 47);
 
 //
 // UI elements
 //
 
-$body-background: $theme-vitamin-c-marine;
-$titles-color: $theme-vitamin-c-spring;
-$text-color: $theme-vitamin-c-sunshine;
+$body-background: $theme-sandy-stone-4;
+$titles-color: $theme-sandy-stone-2;
+$text-color: $theme-sandy-stone-1;
 
-$navbar-background: $theme-vitamin-c-spring;
-$navbar-color: $theme-vitamin-c-flat-grass;
+$navbar-background: $theme-sandy-stone-3;
+$navbar-color: $theme-sandy-stone-5;
 
-$btn-marine-background: $theme-vitamin-c-marine;
-$btn-flat-grass-background: $theme-vitamin-c-flat-grass;
-$btn-spring-background: $theme-vitamin-c-spring;
-$btn-sunshine-background: $theme-vitamin-c-sunshine;
-$btn-brick-background: $theme-vitamin-c-brick;
+$btn-theme-1-background: $theme-sandy-stone-1;
+$btn-theme-2-background: $theme-sandy-stone-2;
+$btn-theme-4-background: $theme-sandy-stone-4;
+$btn-theme-3-background: $theme-sandy-stone-3;
+$btn-theme-5-background: $theme-sandy-stone-5;
