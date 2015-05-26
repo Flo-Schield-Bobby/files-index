@@ -2,12 +2,16 @@
 
 namespace Fsb\Media\FilesIndexBundle\Controller\Front\Pages;
 
+use SplFileObject;
+
 use Symfony\Component\Finder\Finder;
 
 use Fsb\Media\FilesIndexBundle\Controller\FrontController;
 
 class HomeController extends FrontController
 {
+    protected $rootFolder = 'files/';
+
     public function indexAction()
     {
         $user = $this->getUser();
@@ -27,25 +31,33 @@ class HomeController extends FrontController
         ));
     }
 
-    public function downloadAction($file)
+    public function downloadAction($filename)
     {
-
-        $user = $this->getUser();
-        $finder = new Finder();
-
-        $rootFolder = 'files' . $user->getRootFolder() . '/';
-
-        return $this->downloadFile($rootFolder, $file, 'Le fichier demandé n\'existe pas...');
+        return $this->downloadFile($this->getFilePath($filename), $filename, 'Le fichier demandé n\'existe pas...');
     }
 
-    public function serveAction($file)
+    public function serveAction($filename)
     {
+        return $this->serveFile($this->getFilePath($filename));
+    }
 
+    public function streamAction($filename)
+    {
+        $file = new SplFileObject($this->getFilePath($filename));
+
+        return $this->streamFile($file);
+    }
+
+    protected function getFilePath($filename)
+    {
         $user = $this->getUser();
-        $finder = new Finder();
+        $filepath = $this->rootFolder . $user->getRootFolder() . '/' . $filename;
 
-        $filepath = 'files' . $user->getRootFolder() . '/' . $file;
+        return $filepath;
+    }
 
-        return $this->serveFile($filepath);
+    public function infoAction()
+    {
+        phpinfo();
     }
 }

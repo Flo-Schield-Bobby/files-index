@@ -4,10 +4,12 @@ namespace Fsb\Media\FilesIndexBundle\Controller;
 
 use DateTime;
 use SplFileInfo;
+use SplFileObject;
 
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -15,22 +17,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 class FrontController extends Controller
 {
     protected $cacheValidity = 300;
+    protected $chunkSize = 128;
 
-    protected function downloadFile($folder, $filename, $notFoundMessage = 'File not found')
+    protected function downloadFile($filepath, $filename, $notFoundMessage = 'File not found')
     {
-        $fs = new Filesystem();
+        $response = new Response();
 
-        if (!$fs->exists($folder . $filename)) {
+        if (!$this->checkFilePath($filepath)) {
             throw $this->createNotFoundException($notFoundMessage);
         }
 
-        $infos = new SplFileInfo($folder . $filename);
+        $infos = new SplFileInfo($filepath);
         $file = $infos->openFile('r');
 
         $filesize = $infos->getSize();
-        $downloadedName = $infos->getBasename();
-
-        $response = new Response();
+        $downloadedName = $filename;
 
         session_write_close();
 
@@ -57,20 +58,59 @@ class FrontController extends Controller
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-Length', $filesize);
 
-        // Set Content
-        $response->setContent($file->fread($filesize));
+        $response->sendHeaders();
+
+        // Set Content --- Memory Leak here...
+        $content = '';
+        while (!$file->eof()) {
+            $content .= $file->fread($this->chunkSize);
+        }
+        $response->setContent($content);
+
+        // Close the file handler
+        $file = null;
 
         // ETag
         $response->setETag(md5($response->getContent()));
         $response->isNotModified($this->getRequest());
 
+        $response->sendContent();
+    }
+
+    protected function serveFile($filepath)
+    {
+        if (!$this->checkFilePath($filepath)) {
+            throw $this->createNotFoundException($notFoundMessage);
+        }
+
+        $response = new BinaryFileResponse($filepath);
+        // Apache X-Sendfile header
+        $response->trustXSendfileTypeHeader();
+
         return $response;
     }
 
-    protected function serveFile($file)
+    protected function streamFile($file)
     {
-        $response = new BinaryFileResponse($file);
+        $response = new StreamedResponse();
+
+        $response->setCallback(function () use ($file) {
+            $chunkSize = 64;
+            while (!$file->eof()) {
+                echo base64_decode($file->fread($chunkSize));
+            }
+
+            // Close the file handler
+            $file = null;
+        });
 
         return $response;
+    }
+
+    protected function checkFilePath($filepath)
+    {
+        $fs = new Filesystem();
+
+        return $fs->exists($filepath);
     }
 }

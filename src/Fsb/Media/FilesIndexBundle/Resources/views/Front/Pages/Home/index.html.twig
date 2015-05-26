@@ -32,8 +32,8 @@
                         <td>{{ file.filename }}</td>
                         <td>Fichier {{ file.extension|upper }} - {{ (file.size / 1000)|number_format(0, '.', '') }} Mo</td>
                         <td>
-                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_serve_page', { file: file.filename }) }}' title='prévisualiser' target='_blank'><span class='icon icon-2x icon-eye'></span></a>
-                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_download_page', { file: file.filename }) }}' title='télécharger' target='_blank'><span class='icon icon-2x icon-download'></span></a>
+                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' title='prévisualiser' target='_blank'><span class='icon icon-2x icon-eye'></span></a>
+                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}' title='télécharger' target='_blank'><span class='icon icon-2x icon-download'></span></a>
                         </td>
                     </tr>
                 {% endfor %}
