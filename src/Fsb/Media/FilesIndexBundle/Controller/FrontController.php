@@ -19,7 +19,6 @@ class FrontController extends Controller
 
     protected function downloadFile($filepath, $filename, $notFoundMessage = 'File not found')
     {
-
         if (!$this->checkFilePath($filepath)) {
             throw $this->createNotFoundException($notFoundMessage);
         }
@@ -30,7 +29,7 @@ class FrontController extends Controller
 
         $response = new BinaryFileResponse($filepath);
         // Apache X-Sendfile header
-        $response->trustXSendfileTypeHeader();
+        // $response->trustXSendfileTypeHeader();
 
         session_write_close();
 
@@ -39,12 +38,12 @@ class FrontController extends Controller
 
         // Expiration Date
         $expiresAt = new DateTime();
-        $expiresAt->modify('+' . $this->cacheValidity . ' seconds');
+        $expiresAt->modify('+0 seconds');
         $response->setExpires($expiresAt);
 
         // Response Max Age
-        $response->setMaxAge($this->cacheValidity);
-        $response->setSharedMaxAge($this->cacheValidity);
+        $response->setMaxAge(0);
+        $response->setSharedMaxAge(0);
 
         $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
 

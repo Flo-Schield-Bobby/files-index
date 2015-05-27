@@ -26,12 +26,18 @@
                     {% else %}
                         {% set iconClass = 'icon-file-o' %}
                     {% endif %}
-                    <tr class='file static' data-filename='{{ file.filename }}' data-extension='{{ file.extension|upper }}' data-filesize='{{ (file.size / 1000)|number_format(0, '.', '') }}' data-icon-class='{{ iconClass }}' data-preview-link='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' data-download-link='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}'>
+                    {% if file.size > (1000 * 1000 * 1000) %}
+                        {% set size = (file.size / (1000 * 1000 * 1000))|number_format(2, '.', ' ') ~ ' Go' %}
+                    {% elseif file.size > (1000 * 1000) %}
+                        {% set size = (file.size / (1000 * 1000))|number_format(2, '.', ' ') ~ ' Mo' %}
+                    {% else %}
+                        {% set size = (file.size / 1000)|number_format(2, '.', ' ') ~ ' Ko' %}
+                    {% endif %}                    <tr class='file static' data-filename='{{ file.filename }}' data-extension='{{ file.extension|upper }}' data-filesize='{{ size }}' data-icon-class='{{ iconClass }}' data-preview-link='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' data-download-link='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}'>
                         <td>
                             <span class='icon icon-2x {{ iconClass }}'></span>
                         </td>
                         <td>{{ file.filename }}</td>
-                        <td>Fichier {{ file.extension|upper }} - {{ (file.size / 1000)|number_format(0, '.', '') }} Mo</td>
+                        <td>Fichier {{ file.extension|upper }} - {{ size }}</td>
                         <td>
                             <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' title='prévisualiser' target='_blank'><span class='icon icon-2x icon-eye'></span></a>
                             <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}' title='télécharger'><span class='icon icon-2x icon-download'></span></a>
@@ -44,7 +50,7 @@
                             <span class='icon icon-2x {{ file.iconClass }}'></span>
                         </td>
                         <td>{{ file.name }}</td>
-                        <td>Fichier {{ file.extension }} - {{ file.size }} Mo</td>
+                        <td>Fichier {{ file.extension }} - {{ file.size }}</td>
                         <td>
                             <a class='btn btn-sm btn-theme-3' href='{{ file.previewLink }}' target='_blank' title='prévisualiser' data-toggle='tooltip' data-placement='bottom'><span class='icon icon-2x icon-eye'></span></a>
                             <a class='btn btn-sm btn-theme-3' href='{{ file.downloadLink }}' title='télécharger' data-toggle='tooltip' data-placement='bottom' data-original-title='télécharger'><span class='icon icon-2x icon-download'></span></a>
