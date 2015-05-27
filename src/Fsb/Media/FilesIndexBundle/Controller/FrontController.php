@@ -53,20 +53,6 @@ class FrontController extends Controller
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-Length', $filesize);
 
-
-        // Expiration Date
-        $expiresAt = new DateTime();
-        $expiresAt->modify('+0 seconds');
-        $response->setExpires($expiresAt);
-
-        // Response Max Age
-        $response->setMaxAge(0);
-        $response->setSharedMaxAge(0);
-
-        // ETag
-        $response->setETag(md5($response->getContent()));
-        $response->isNotModified($this->getRequest());
-
         return $response;
     }
 
@@ -77,8 +63,6 @@ class FrontController extends Controller
         }
 
         $response = new BinaryFileResponse($filepath);
-        // Apache X-Sendfile header
-        $response->trustXSendfileTypeHeader();
 
         return $response;
     }
