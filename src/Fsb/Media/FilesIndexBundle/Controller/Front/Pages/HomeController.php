@@ -55,9 +55,4 @@ class HomeController extends FrontController
 
         return $filepath;
     }
-
-    public function infoAction()
-    {
-        phpinfo();
-    }
 }
