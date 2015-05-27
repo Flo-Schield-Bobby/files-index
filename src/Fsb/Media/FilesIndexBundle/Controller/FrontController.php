@@ -28,8 +28,14 @@ class FrontController extends Controller
         $downloadedName = $filename;
 
         $response = new BinaryFileResponse($filepath);
+
+        //
         // Apache X-Sendfile header
-        // $response->trustXSendfileTypeHeader();
+        // This line should be removed in case the app is :
+        //  - Not running on an apache server
+        //  - Running on an apache server without mod_xsendfile enabled
+        //
+        $response->trustXSendfileTypeHeader();
 
         session_write_close();
 
