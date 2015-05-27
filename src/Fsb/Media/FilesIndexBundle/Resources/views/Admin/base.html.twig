@@ -65,6 +65,7 @@
     {{ parent() }}
     {% javascripts
         'bundles/fsbmediafilesindex/js/admin.js'
+        filter='?uglifyjs2'
         output='js/admin.min.js' %}
         <script src='{{ asset_url }}'></script>
     {% endjavascripts %}
