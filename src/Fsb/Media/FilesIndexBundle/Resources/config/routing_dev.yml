@@ -1,0 +1,6 @@
+fsb_media_files_index_hash:
+    path:   /hash/{password}
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Front/Security/Authentication:hash
+    requirements:
+        _method: GET
