@@ -35,6 +35,7 @@ class FrontController extends Controller
         //  - Not running on an apache server
         //  - Running on an apache server without mod_xsendfile enabled
         //
+        $response->headers->set('X-SendFile', $filepath);
         $response->trustXSendfileTypeHeader();
 
         session_write_close();
@@ -55,7 +56,7 @@ class FrontController extends Controller
 
         $response->headers->set('Content-Description', 'File Transfer');
         $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Transfer-Encoding', 'binary;');
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
         $response->headers->set('Content-Disposition', $disposition);
         $response->headers->set('Content-Length', $filesize);
 

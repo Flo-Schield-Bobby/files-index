@@ -10,14 +10,14 @@ use Fsb\Media\FilesIndexBundle\Controller\FrontController;
 
 class HomeController extends FrontController
 {
-    protected $rootFolder = 'files/';
+    protected $rootFolder = 'files';
 
     public function indexAction()
     {
         $user = $this->getUser();
         $finder = new Finder();
 
-        $rootFolder = 'files' . $user->getRootFolder();
+        $rootFolder = $this->rootFolder . $user->getRootFolder();
         $finder->files()->in($rootFolder);
         $error = null;
 
