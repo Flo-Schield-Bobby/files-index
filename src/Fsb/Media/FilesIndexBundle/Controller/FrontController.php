@@ -28,6 +28,16 @@ class FrontController extends Controller
         $downloadedName = $filename;
 
         $response = new BinaryFileResponse($filepath);
+        $response->setStatusCode(200);
+
+        // Manager Response headers
+        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
+
+        $response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Content-Disposition', $disposition);
+        $response->headers->set('Content-Length', $filesize);
 
         //
         // Apache X-Sendfile header
@@ -38,9 +48,7 @@ class FrontController extends Controller
         $response->headers->set('X-SendFile', $filepath);
         $response->trustXSendfileTypeHeader();
 
-        session_write_close();
-
-        $response->setStatusCode(200);
+        // Set Response public
         $response->setPublic();
 
         // Expiration Date
@@ -52,13 +60,7 @@ class FrontController extends Controller
         $response->setMaxAge(0);
         $response->setSharedMaxAge(0);
 
-        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
-
-        $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-Length', $filesize);
+        session_write_close();
 
         // ETag
         $response->setETag(md5($response->getContent()));
