@@ -74,6 +74,7 @@
 {% endblock %}
 
 {% block javascripts %}
+    {{ parent() }}
     {% javascripts
         'bundles/fsbmediafilesindex/bower_components/vue/dist/vue.min.js'
         'bundles/fsbmediafilesindex/js/filtrable-list.js'
