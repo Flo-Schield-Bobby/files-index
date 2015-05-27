@@ -5,31 +5,28 @@ window.addEventListener('load', function (event) {
         data: {
             files: [],
             query: ''
+        },
+        created: function () {
+            if (data && 'files' in data) {
+                data.files.forEach(function (file, index) {
+                    this.files.$set(index, {
+                        name: file.filename,
+                        extension: file.extension,
+                        size: file.filesize,
+                        iconClass: file.iconClass,
+                        previewLink: file.previewLink,
+                        downloadLink: file.downloadLink
+                    });
+                }, this);
+
+                window.data = undefined;
+
+                var dataScript = document.getElementById('data-script');
+
+                if (dataScript) {
+                    dataScript.remove();
+                }
+            }
         }
     });
-
-    var filesList = document.querySelector('#files-list');
-
-    if (filesList) {
-        var files = filesList.querySelectorAll('.file.static');
-        var filesLength = files.length;
-        var index;
-
-        for (index = 0; index < filesLength; index++) {
-            var file = files[index];
-            
-            filtrableList.files.$set(index, {
-                name: file.dataset.filename,
-                extension: file.dataset.extension,
-                size: file.dataset.filesize,
-                iconClass: file.dataset.iconClass,
-                previewLink: file.dataset.previewLink,
-                downloadLink: file.dataset.downloadLink
-            });
-            
-            file.remove();
-        }
-
-        filesList.classList.add('compiled');
-    }
 });

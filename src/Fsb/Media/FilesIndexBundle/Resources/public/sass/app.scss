@@ -93,16 +93,11 @@ html {
             color: inherit;
         }
         #files-list {
-            opacity: 0;
-            transition: all 0.33s ease-out;
             .file {
                 &:hover {
                     transition: all 0.33s ease-out;
                     background: darken($body-background, 4);
                 }
-            }
-            &.compiled {
-                opacity: 1;
             }
         }
     }

@@ -2441,18 +2441,9 @@ html body .btn.btn-theme-5 .icon, html body .btn.btn-theme-5:not(.btn-link):not(
 html body .form-control {
   color: inherit;
 }
-html body #files-list {
-  opacity: 0;
-  -webkit-transition: all 0.33s ease-out;
-     -moz-transition: all 0.33s ease-out;
-          transition: all 0.33s ease-out;
-}
 html body #files-list .file:hover {
   -webkit-transition: all 0.33s ease-out;
      -moz-transition: all 0.33s ease-out;
           transition: all 0.33s ease-out;
   background: #03546c;
-}
-html body #files-list.compiled {
-  opacity: 1;
 }

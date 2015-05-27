@@ -1,5 +1,44 @@
 {% extends 'FsbMediaFilesIndexBundle:Front:base.html.twig' %}
 
+{% block head_data %}
+    {% spaceless %}
+        <script id='data-script'>
+            var data = {
+                files: [
+                    {% for file in files %}
+                        {% if file.extension in ['jpeg', 'jpg', 'png', 'gif'] %}
+                            {% set iconClass = 'icon-file-picture-o' %}
+                        {% elseif file.extension in ['mp4', 'ogv', 'webm', 'avi', 'mkv'] %}
+                            {% set iconClass = 'icon-file-movie-o' %}
+                        {% elseif file.extension in ['mp3', 'aac', 'wav', 'ogg'] %}
+                            {% set iconClass = 'icon-file-audio-o' %}
+                        {% elseif file.extension in ['rar', 'zip', 'tar.gz', 'gz'] %}
+                            {% set iconClass = 'icon-file-zip-o' %}
+                        {% else %}
+                            {% set iconClass = 'icon-file-o' %}
+                        {% endif %}
+                        {% if file.size > (1000 * 1000 * 1000) %}
+                            {% set size = (file.size / (1000 * 1000 * 1000))|number_format(2, '.', ' ') ~ ' Go' %}
+                        {% elseif file.size > (1000 * 1000) %}
+                            {% set size = (file.size / (1000 * 1000))|number_format(2, '.', ' ') ~ ' Mo' %}
+                        {% else %}
+                            {% set size = (file.size / 1000)|number_format(2, '.', ' ') ~ ' Ko' %}
+                        {% endif %}
+                        {
+                            "filename": "{{ file.filename }}",
+                            "extension": "{{ file.extension|upper }}",
+                            "filesize": "{{ size }}",
+                            "iconClass": "{{ iconClass }}",
+                            "previewLink": "{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}",
+                            "downloadLink": "{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}"
+                        }{% if not loop.last %},{% endif %}
+                    {% endfor %}
+                ]
+            };
+        </script>
+    {% endspaceless %}
+{% endblock %}
+
 {% block app_container %}
     <h1>Partage de fichiers</h1>
     <p>Visualisez ou téléchargez ce que vous voulez !</p>
@@ -14,36 +53,6 @@
                 </tr>
             </thead>
             <tbody id='files-list'>
-                {% for file in files %}
-                    {% if file.extension in ['jpeg', 'jpg', 'png', 'gif'] %}
-                        {% set iconClass = 'icon-file-picture-o' %}
-                    {% elseif file.extension in ['mp4', 'ogv', 'webm', 'avi', 'mkv'] %}
-                        {% set iconClass = 'icon-file-movie-o' %}
-                    {% elseif file.extension in ['mp3', 'aac', 'wav', 'ogg'] %}
-                        {% set iconClass = 'icon-file-audio-o' %}
-                    {% elseif file.extension in ['rar', 'zip', 'tar.gz', 'gz'] %}
-                        {% set iconClass = 'icon-file-zip-o' %}
-                    {% else %}
-                        {% set iconClass = 'icon-file-o' %}
-                    {% endif %}
-                    {% if file.size > (1000 * 1000 * 1000) %}
-                        {% set size = (file.size / (1000 * 1000 * 1000))|number_format(2, '.', ' ') ~ ' Go' %}
-                    {% elseif file.size > (1000 * 1000) %}
-                        {% set size = (file.size / (1000 * 1000))|number_format(2, '.', ' ') ~ ' Mo' %}
-                    {% else %}
-                        {% set size = (file.size / 1000)|number_format(2, '.', ' ') ~ ' Ko' %}
-                    {% endif %}                    <tr class='file static' data-filename='{{ file.filename }}' data-extension='{{ file.extension|upper }}' data-filesize='{{ size }}' data-icon-class='{{ iconClass }}' data-preview-link='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' data-download-link='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}'>
-                        <td>
-                            <span class='icon icon-2x {{ iconClass }}'></span>
-                        </td>
-                        <td>{{ file.filename }}</td>
-                        <td>Fichier {{ file.extension|upper }} - {{ size }}</td>
-                        <td>
-                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}' title='prévisualiser' target='_blank'><span class='icon icon-2x icon-eye'></span></a>
-                            <a class='btn btn-sm btn-primary' href='{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}' title='télécharger'><span class='icon icon-2x icon-download'></span></a>
-                        </td>
-                    </tr>
-                {% endfor %}
                 {% raw %}
                     <tr class='file' v-repeat='file: files | filterBy query' v-cloak>
                         <td>
@@ -68,6 +77,7 @@
     {% javascripts
         'bundles/fsbmediafilesindex/bower_components/vue/dist/vue.min.js'
         'bundles/fsbmediafilesindex/js/filtrable-list.js'
+        filter='?uglifyjs2'
         output='js/home.min.js' %}
         <script src='{{ asset_url }}'></script>
     {% endjavascripts %}

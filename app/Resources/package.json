@@ -1,0 +1,10 @@
+{
+  "name": "files-index-filters",
+  "version": "0.0.1",
+  "description": "Files Index project assetic filters",
+  "dependencies": {
+    "uglify-js": "^2.4.23"
+  },
+  "devDependencies": {},
+  "author": "Florent Schildknecht <florent.schildknecht@gmail.com>"
+}
