@@ -23,6 +23,8 @@ class FrontController extends Controller
             throw $this->createNotFoundException($notFoundMessage);
         }
 
+        session_write_close();
+
         $infos = new SplFileInfo($filepath);
         $filesize = $infos->getSize();
         $downloadedName = $filename;
@@ -30,14 +32,8 @@ class FrontController extends Controller
         $response = new BinaryFileResponse($filepath);
         $response->setStatusCode(200);
 
-        // Manager Response headers
-        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
-
-        $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
-        $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-Length', $filesize);
+        // Set Response public
+        $response->setPublic();
 
         //
         // Apache X-Sendfile header
@@ -48,8 +44,15 @@ class FrontController extends Controller
         $response->headers->set('X-SendFile', $filepath);
         $response->trustXSendfileTypeHeader();
 
-        // Set Response public
-        $response->setPublic();
+        // Manager Response headers
+        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
+
+        $response->headers->set('Content-Description', 'File Transfer');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Transfer-Encoding', 'binary');
+        $response->headers->set('Content-Disposition', $disposition);
+        $response->headers->set('Content-Length', $filesize);
+
 
         // Expiration Date
         $expiresAt = new DateTime();
@@ -59,8 +62,6 @@ class FrontController extends Controller
         // Response Max Age
         $response->setMaxAge(0);
         $response->setSharedMaxAge(0);
-
-        session_write_close();
 
         // ETag
         $response->setETag(md5($response->getContent()));
