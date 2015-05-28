@@ -6,16 +6,24 @@
             var data = {
                 files: [
                     {% for file in files %}
-                        {% if file.extension in ['jpeg', 'jpg', 'png', 'gif'] %}
+                        {% if file.extension in ['jpeg', 'jpg', 'png', 'gif', 'svg'] %}
                             {% set iconClass = 'icon-file-picture-o' %}
+                            {% set type = 'image' %}
                         {% elseif file.extension in ['mp4', 'ogv', 'webm', 'avi', 'mkv'] %}
                             {% set iconClass = 'icon-file-movie-o' %}
+                            {% set type = 'video' %}
                         {% elseif file.extension in ['mp3', 'aac', 'wav', 'ogg'] %}
                             {% set iconClass = 'icon-file-audio-o' %}
+                            {% set type = 'sound' %}
                         {% elseif file.extension in ['rar', 'zip', 'tar.gz', 'gz'] %}
                             {% set iconClass = 'icon-file-zip-o' %}
+                            {% set type = 'archive' %}
+                        {% elseif file.extension in ['txt', 'pdf', 'rtf', 'doc', 'docx'] %}
+                            {% set iconClass = 'icon-file-text-o' %}
+                            {% set type = 'text' %}
                         {% else %}
                             {% set iconClass = 'icon-file-o' %}
+                            {% set type = 'file' %}
                         {% endif %}
                         {% if file.size > (1000 * 1000 * 1000) %}
                             {% set size = (file.size / (1000 * 1000 * 1000))|number_format(2, '.', ' ') ~ ' Go' %}
@@ -28,6 +36,7 @@
                             "filename": "{{ file.filename }}",
                             "extension": "{{ file.extension|upper }}",
                             "filesize": "{{ size }}",
+                            "filetype": "{{ type }}",
                             "iconClass": "{{ iconClass }}",
                             "previewLink": "{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}",
                             "downloadLink": "{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}"
@@ -43,31 +52,37 @@
     <h1>Partage de fichiers</h1>
     <p>Visualisez ou téléchargez ce que vous voulez !</p>
     {% if files %}
-        <table class='table table-bordered table-stripped'>
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>Fichier</th>
-                    <th>Infos</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody id='files-list'>
-                {% raw %}
-                    <tr class='file' v-repeat='file: files | filterBy query' v-cloak>
-                        <td>
-                            <span class='icon icon-2x {{ file.iconClass }}'></span>
-                        </td>
-                        <td>{{ file.name }}</td>
-                        <td>Fichier {{ file.extension }} - {{ file.size }}</td>
-                        <td>
-                            <a class='btn btn-sm btn-theme-3' href='{{ file.previewLink }}' target='_blank' title='prévisualiser' data-toggle='tooltip' data-placement='bottom'><span class='icon icon-2x icon-eye'></span></a>
-                            <a class='btn btn-sm btn-theme-3' href='{{ file.downloadLink }}' title='télécharger' data-toggle='tooltip' data-placement='bottom' data-original-title='télécharger'><span class='icon icon-2x icon-download'></span></a>
-                        </td>
-                    </tr>
-                {% endraw %}
-            </tbody>
-        </table>
+        <div class='table-responsive'>
+            {% raw %}
+                <table class='table table-bordered table-stripped'>
+                    <thead>
+                        <tr>
+                            <th v-on='click: sortBy("type")' v-class='active: sortKey == "type"'>Type <span class='pull-right icon' v-class='reversed["type"] ? "icon-caret-up" : "icon-caret-down"'></span></th>
+                            <th v-on='click: sortBy("name")' v-class='active: sortKey == "name"'>Fichier <span class='pull-right icon' v-class='reversed["name"] ? "icon-caret-up" : "icon-caret-down"'></span></th>
+                            <th>Infos</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id='files-list'>
+                        <tr class='file' v-repeat='file: files | filterBy query in "name" | filterBy type in "type" | orderBy sortKey reversed[sortKey]' v-cloak>
+                            <td>
+                                <span class='icon icon-2x {{ file.iconClass }}'></span>
+                            </td>
+                            <td>{{ file.name }}</td>
+                            <td>Fichier {{ file.extension }} - {{ file.size }}</td>
+                            <td>
+                                <a class='btn btn-sm btn-theme-3' href='{{ file.previewLink }}' target='_blank' title='prévisualiser' data-toggle='tooltip' data-placement='bottom'>
+                                    <span class='icon icon-2x icon-eye'></span>
+                                </a>
+                                <a class='btn btn-sm btn-theme-3' href='{{ file.downloadLink }}' title='télécharger' data-toggle='tooltip' data-placement='bottom' data-original-title='télécharger'>
+                                    <span class='icon icon-2x icon-download'></span>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            {% endraw %}
+        </div>
     {% else %}
         <p class='alert-danger'>{{ error }}</p>
     {% endif %}

@@ -4,7 +4,10 @@ window.addEventListener('load', function (event) {
         el: 'body',
         data: {
             files: [],
-            query: ''
+            sortKey: '',
+            type: '',
+            query: '',
+            reversed: {}
         },
         created: function () {
             if (data && 'files' in data) {
@@ -13,6 +16,7 @@ window.addEventListener('load', function (event) {
                         name: file.filename,
                         extension: file.extension,
                         size: file.filesize,
+                        type: file.filetype,
                         iconClass: file.iconClass,
                         previewLink: file.previewLink,
                         downloadLink: file.downloadLink
@@ -26,6 +30,25 @@ window.addEventListener('load', function (event) {
                 if (dataScript) {
                     dataScript.remove();
                 }
+            }
+        },
+        compiled: function () {
+            this.reversed.$add('type', false);
+            this.reversed.$add('name', false);
+        },
+        methods: {
+            onFilterClick: function (event) {
+                event.preventDefault();
+                
+                if (this.type == event.target.dataset.filter) {
+                    this.type = '';
+                } else {
+                    this.type = event.target.dataset.filter;
+                }
+            },
+            sortBy: function (key) {
+                this.sortKey = key;
+                this.reversed[key] = !this.reversed[key];
             }
         }
     });

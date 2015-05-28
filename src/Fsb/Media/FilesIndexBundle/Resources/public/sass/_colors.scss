@@ -1,27 +1,28 @@
-// Sandy Stone Kuler theme
+// 1944Mustang Kuler theme
 // 
-// Home page : https://color.adobe.com/sandy-stone-beach-ocean-diver-color-theme-15325
-// Credits © PS https://color.adobe.com/userId%3A17923-art-colors/
+// Home page : https://color.adobe.com/1944mustang-color-theme-4817
+// Credits © nathaniel https://color.adobe.com/userId%3A5926-art-colors/
 
-$theme-sandy-stone-1: rgb(230, 226, 175);
-$theme-sandy-stone-2: rgb(167, 163, 126);
-$theme-sandy-stone-3: rgb(239, 236, 202);
-$theme-sandy-stone-4: rgb(4, 99, 128);
-$theme-sandy-stone-5: rgb(0, 47, 47);
+$theme-1944mustang-1: rgb(0, 0, 0);
+$theme-1944mustang-2: rgb(38, 50, 72);
+$theme-1944mustang-3: rgb(126, 138, 162);
+$theme-1944mustang-4: rgb(255, 255, 255);
+$theme-1944mustang-5: rgb(255, 152, 0);
 
 //
 // UI elements
 //
 
-$body-background: $theme-sandy-stone-4;
-$titles-color: $theme-sandy-stone-2;
-$text-color: $theme-sandy-stone-1;
+$body-background: $theme-1944mustang-4;
+$titles-color: $theme-1944mustang-3;
+$text-color: $theme-1944mustang-2;
 
-$navbar-background: $theme-sandy-stone-3;
-$navbar-color: $theme-sandy-stone-5;
+$navbar-background: $theme-1944mustang-2;
+$navbar-color: $theme-1944mustang-5;
+$toolbar-button-color: $theme-1944mustang-2;
 
-$btn-theme-1-background: $theme-sandy-stone-1;
-$btn-theme-2-background: $theme-sandy-stone-2;
-$btn-theme-4-background: $theme-sandy-stone-4;
-$btn-theme-3-background: $theme-sandy-stone-3;
-$btn-theme-5-background: $theme-sandy-stone-5;
+$btn-theme-1-background: $theme-1944mustang-1;
+$btn-theme-2-background: $theme-1944mustang-2;
+$btn-theme-4-background: $theme-1944mustang-4;
+$btn-theme-3-background: $theme-1944mustang-3;
+$btn-theme-5-background: $theme-1944mustang-5;
