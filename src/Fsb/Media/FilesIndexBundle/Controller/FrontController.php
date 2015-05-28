@@ -18,20 +18,11 @@ class FrontController extends Controller
     protected $cacheValidity = 300;
     protected $chunkSize = 128;
 
-    protected function downloadFile($filepath, $filename, $notFoundMessage = 'File not found')
+    protected function sendFile($filepath)
     {
-        if (!$this->checkFilePath($filepath)) {
-            throw $this->createNotFoundException($notFoundMessage);
-        }
-
         session_write_close();
 
-        $infos = new SplFileInfo($filepath);
-        $filesize = $infos->getSize();
-        $downloadedName = $filename;
-
         $response = new BinaryFileResponse($filepath);
-        $response->setStatusCode(200);
 
         // Set Response public
         $response->setPublic();
@@ -42,17 +33,33 @@ class FrontController extends Controller
         //  - Not running on an apache server
         //  - Running on an apache server without mod_xsendfile enabled
         //
-        // $response->headers->set('X-SendFile', $filepath);
-        // $response->trustXSendfileTypeHeader();
+        $response->headers->set('X-Sendfile', $filepath);
+        $response->trustXSendfileTypeHeader();
 
-        // Manager Response headers
-        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
+        return $response;
+    }
 
-        $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Transfer-Encoding', 'binary');
+    protected function downloadFile($filepath, $filename, $notFoundMessage = 'File not found')
+    {
+        if (!$this->checkFilePath($filepath)) {
+            throw $this->createNotFoundException($notFoundMessage);
+        }
+
+        session_write_close();
+
+        $infos = new SplFileInfo($filepath);
+
+        $response = new BinaryFileResponse($filepath);
+        $response->setStatusCode(200);
+
+        // Set Response public
+        $response->setPublic();
+
+        // Manage Response headers
+        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
         $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-Length', $filesize);
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Length', $infos->getSize());
 
         return $response;
     }
@@ -63,15 +70,40 @@ class FrontController extends Controller
             throw $this->createNotFoundException($notFoundMessage);
         }
 
+        session_write_close();
+
         $response = new BinaryFileResponse($filepath);
+        $response->setPublic();
 
         return $response;
     }
 
-    protected function streamFile($file)
+    protected function streamFile($filepath)
     {
+        if (!$this->checkFilePath($filepath)) {
+            throw $this->createNotFoundException($notFoundMessage);
+        }
+
+        $file = new SplFileObject($filepath);
+
+        session_write_close();
+
         $request = $this->getRequest();
+
         $response = new StreamedResponse();
+
+        // Set Response public
+        $response->setPublic();
+
+        // Manage Response headers
+        $contentDisposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $file->getFilename());
+        $response->headers->set('Content-Disposition', $contentDisposition);
+        $response->headers->set('Content-Type', 'application/octet-stream');
+        $response->headers->set('Content-Length', $file->getSize());
+
+        // Prepare Response then send headers
+        $response->prepare($request);
+        $response->sendHeaders();
 
         $chunkSize = $this->chunkSize;
 
@@ -84,17 +116,7 @@ class FrontController extends Controller
             $file = null;
         });
 
-        $contentDisposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $file->getFilename());
-
-        $response->headers->set('Content-Description', 'File Transfer');
-        $response->headers->set('Content-Type', 'application/force-download');
-        $response->headers->set('Content-Transfer-Encoding', 'binary;');
-        $response->headers->set('Content-Disposition', $contentDisposition);
-        $response->headers->set('Content-Length', $file->getSize());
-
-        $response->prepare($request);
-
-        return $response;
+        $response->sendContent();
     }
 
     protected function checkFilePath($filepath)

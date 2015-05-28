@@ -60,3 +60,8 @@ DirectoryIndex app.php
         # RedirectTemp cannot be used instead
     </IfModule>
 </IfModule>
+
+# Avoid compression of force-downloaded files
+SetEnvIf Request_URI ^/files/serve/ no-gzip dont-vary
+SetEnvIf Request_URI ^/files/get/ no-gzip dont-vary
+SetEnvIf Request_URI ^/files/stream/ no-gzip dont-vary

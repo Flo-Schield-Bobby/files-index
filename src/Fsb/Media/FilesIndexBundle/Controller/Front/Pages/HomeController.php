@@ -43,9 +43,12 @@ class HomeController extends FrontController
 
     public function streamAction($filename)
     {
-        $file = new SplFileObject($this->getFilePath($filename));
+        return $this->streamFile($this->getFilePath($filename));
+    }
 
-        return $this->streamFile($file);
+    public function sendAction($filename)
+    {
+        return $this->sendFile($this->getFilePath($filename));
     }
 
     protected function getFilePath($filename)
