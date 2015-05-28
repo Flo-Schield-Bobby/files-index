@@ -1,5 +1,7 @@
 {% extends 'FsbMediaFilesIndexBundle:Front:base.html.twig' %}
 
+{% block body_attributes %}{% if is_granted('ROLE_USER') %}class='authenticated'{% endif %}{% endblock %}
+
 {% block head_data %}
     {% spaceless %}
         <script id='data-script'>
@@ -49,7 +51,7 @@
 {% endblock %}
 
 {% block app_container %}
-    <h1>Partage de fichiers</h1>
+    <h1 id='page-title'>Partage de fichiers</h1>
     <p>Visualisez ou téléchargez ce que vous voulez !</p>
     {% if files %}
         <div class='table-responsive'>

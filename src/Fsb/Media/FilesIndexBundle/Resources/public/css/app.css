@@ -2371,7 +2371,7 @@
 }
 
 html body {
-  padding-top: 50px;
+  padding-top: 75px;
   background: white;
   color: #263248;
   -webkit-transition: all 0.33s ease-out;
@@ -2388,6 +2388,9 @@ html body h4,
 html body h5,
 html body h6 {
   color: #7e8aa2;
+}
+html body #page-title {
+  margin-top: 0;
 }
 html body .navbar.navbar-index {
   background: #263248;
@@ -2461,7 +2464,11 @@ html body .btn.btn-theme-5 .icon, html body .btn.btn-theme-5:not(.btn-link):not(
   color: white;
 }
 html body .form-control {
+  padding: 0 5px;
   color: inherit;
+}
+html body .form-control:hover, html body .form-control:active, html body .form-control:focus {
+  padding: 0 5px;
 }
 html body #files-list .file:hover {
   -webkit-transition: all 0.33s ease-out;
@@ -2470,37 +2477,37 @@ html body #files-list .file:hover {
   background: whitesmoke;
 }
 @media (max-width: 767px) {
-  html body {
-    padding-top: 106px;
+  html body.authenticated {
+    padding-top: 135px;
   }
-  html body .navbar.navbar-index .navbar-sm-link {
-    height: 30px;
-    padding-top: 5px;
+  html body.authenticated .navbar.navbar-index .navbar-sm-link {
+    height: 35px;
+    padding-top: 10px;
     padding-bottom: 5px;
     line-height: 20px;
   }
-  html body .navbar.navbar-index .navbar-form {
+  html body.authenticated .navbar.navbar-index .navbar-form {
     width: 100%;
     padding: 0;
     margin-top: 0;
   }
-  html body .navbar.navbar-index .navbar-form .form-group {
+  html body.authenticated .navbar.navbar-index .navbar-form .form-group {
     margin-bottom: 10px;
   }
-  html body .navbar.navbar-index .navbar-form .form-group:last-child {
+  html body.authenticated .navbar.navbar-index .navbar-form .form-group:last-child {
     margin-bottom: 0;
   }
-  html body .navbar.navbar-index .navbar-form .btn-toolbar {
+  html body.authenticated .navbar.navbar-index .navbar-form .btn-toolbar {
     margin-left: 0;
   }
-  html body .navbar.navbar-index .navbar-form .btn-toolbar .btn-group {
+  html body.authenticated .navbar.navbar-index .navbar-form .btn-toolbar .btn-group {
     display: table;
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
     margin-left: 0;
   }
-  html body .navbar.navbar-index .navbar-form .btn-toolbar .btn-group .btn {
+  html body.authenticated .navbar.navbar-index .navbar-form .btn-toolbar .btn-group .btn {
     display: table-cell;
     float: none;
     width: 1%;

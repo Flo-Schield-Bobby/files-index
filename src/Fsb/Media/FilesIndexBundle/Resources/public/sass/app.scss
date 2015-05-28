@@ -4,7 +4,7 @@
 
 html {
     body {
-        padding-top: 50px;
+        padding-top: 75px;
         background: $body-background;
         color: $text-color;
         transition: all 0.33s ease-out;
@@ -18,6 +18,9 @@ html {
         h5,
         h6 {
             color: $titles-color;
+        }
+        #page-title {
+            margin-top: 0;
         }
         .navbar {
             &.navbar-index {
@@ -110,7 +113,13 @@ html {
             }
         }
         .form-control {
+            padding: 0 5px;
             color: inherit;
+            &:hover,
+            &:active,
+            &:focus {
+                padding: 0 5px;
+            }
         }
         #files-list {
             .file {
@@ -121,37 +130,39 @@ html {
             }
         }
         @media (max-width: $screen-xs-max) {
-            padding-top: 106px;
-            .navbar {
-                &.navbar-index {
-                    .navbar-sm-link {
-                        height: 30px;
-                        padding-top: 5px;
-                        padding-bottom: 5px;
-                        line-height: 20px;
-                    }
-                    .navbar-form {
-                        width: 100%;
-                        padding: 0;
-                        margin-top: 0;
-                        .form-group {
-                            margin-bottom: 10px;
-                            &:last-child {
-                                margin-bottom: 0;
-                            }
+            &.authenticated {
+                padding-top: 135px;
+                .navbar {
+                    &.navbar-index {
+                        .navbar-sm-link {
+                            height: 35px;
+                            padding-top: 10px;
+                            padding-bottom: 5px;
+                            line-height: 20px;
                         }
-                        .btn-toolbar {
-                            margin-left: 0;
-                            .btn-group {
-                                display: table;
-                                width: 100%;
-                                table-layout: fixed;
-                                border-collapse: collapse;
+                        .navbar-form {
+                            width: 100%;
+                            padding: 0;
+                            margin-top: 0;
+                            .form-group {
+                                margin-bottom: 10px;
+                                &:last-child {
+                                    margin-bottom: 0;
+                                }
+                            }
+                            .btn-toolbar {
                                 margin-left: 0;
-                                .btn {
-                                    display: table-cell;
-                                    float: none;
-                                    width: 1%;
+                                .btn-group {
+                                    display: table;
+                                    width: 100%;
+                                    table-layout: fixed;
+                                    border-collapse: collapse;
+                                    margin-left: 0;
+                                    .btn {
+                                        display: table-cell;
+                                        float: none;
+                                        width: 1%;
+                                    }
                                 }
                             }
                         }
