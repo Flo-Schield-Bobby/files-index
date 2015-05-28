@@ -6,6 +6,7 @@ use DateTime;
 use SplFileInfo;
 use SplFileObject;
 
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
@@ -16,6 +17,53 @@ class FrontController extends Controller
 {
     protected $cacheValidity = 300;
     protected $chunkSize = 128;
+
+    /**
+     * Renders a view.
+     *
+     * @param string   $view       The view name
+     * @param array    $parameters An array of parameters to pass to the view
+     * @param Response $response   A response instance
+     *
+     * @return Response A Response instance
+     */
+    public function render($view, array $parameters = array(), Response $response = null)
+    {
+        $request = $this->getRequest();
+        $shouldCacheResponse = true;
+
+        // Only cache GET and HEAD Responses, and if the Response object has not yet been built.
+        // Because it might be already cached in a better way, otherwise.
+        if (!(is_null($response)) || !(in_array($request->getMethod(), array('GET', 'HEAD')))) {
+            $shouldCacheResponse = false;
+        }
+
+        if ($shouldCacheResponse) {
+            $response = new Response();
+
+            // Expiration Date
+            $expiresAt = new DateTime();
+            $expiresAt->modify('+' . $this->cacheValidity . ' seconds');
+            $response->setExpires($expiresAt);
+
+            // Response Max Age
+            $response->setMaxAge($this->cacheValidity);
+            $response->setSharedMaxAge($this->cacheValidity);
+        }
+
+        // It takes actually a while to calculate all the rendering before beeing able to check the MD5 checksum
+        // However, for pages with several queries and static content such as home page, I can't figure out anything faster at the moment
+        // This method can (and should!) be improved for "data-based" pages.
+        $response = $this->container->get('templating')->renderResponse($view, $parameters, $response);
+
+        if ($shouldCacheResponse) {
+            $response->setPublic();
+            $response->setETag(md5($response->getContent()));
+            $response->isNotModified($this->getRequest());
+        }
+
+        return $response;
+    }
 
     protected function downloadFile($filepath, $filename, $notFoundMessage = 'File not found')
     {

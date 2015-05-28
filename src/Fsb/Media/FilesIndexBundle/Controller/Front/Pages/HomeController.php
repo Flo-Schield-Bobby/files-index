@@ -18,7 +18,7 @@ class HomeController extends FrontController
         $finder = new Finder();
 
         $rootFolder = $this->rootFolder . $user->getRootFolder();
-        $finder->files()->in($rootFolder);
+        $finder->files()->in($rootFolder)->sortByModifiedTime();
         $error = null;
 
         if (!$finder) {
