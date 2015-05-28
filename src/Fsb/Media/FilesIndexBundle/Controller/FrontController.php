@@ -42,8 +42,8 @@ class FrontController extends Controller
         //  - Not running on an apache server
         //  - Running on an apache server without mod_xsendfile enabled
         //
-        $response->headers->set('X-SendFile', $filepath);
-        $response->trustXSendfileTypeHeader();
+        // $response->headers->set('X-SendFile', $filepath);
+        // $response->trustXSendfileTypeHeader();
 
         // Manager Response headers
         $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $downloadedName);
