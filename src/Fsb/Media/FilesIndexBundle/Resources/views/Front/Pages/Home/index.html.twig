@@ -41,7 +41,7 @@
                             "filetype": "{{ type }}",
                             "iconClass": "{{ iconClass }}",
                             "previewLink": "{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}",
-                            "downloadLink": "{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}"
+                            "downloadLink": "{{ path('fsb_media_files_index_file_send_page', { filename: file.filename }) }}"
                         }{% if not loop.last %},{% endif %}
                     {% endfor %}
                 ]
