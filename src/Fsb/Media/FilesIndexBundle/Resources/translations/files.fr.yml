@@ -1,0 +1,17 @@
+exceptions:
+    files:
+        404: Le fichier '%s' est introuvable.
+
+errors:
+    finder:
+        404: Nous avons un petit problème ici. Une équipe de ninjas expérimentés arrive à votre secours !
+
+list:
+    header:
+        title: Partage de fichiers
+        description: Visualisez ou téléchargez ce que vous voulez !
+    labels:
+        type: Type
+        file: Fichier
+        infos: Infos
+        actions: Actions

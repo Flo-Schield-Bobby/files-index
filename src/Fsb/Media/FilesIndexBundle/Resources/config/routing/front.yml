@@ -1,19 +1,23 @@
-fsb_media_files_index_file_download_page:
-    path:     /files/get/{filename}
+fsb_media_files_index_file_send_page:
+    path:     /files/send/{filename}
     defaults:
-        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:download
+        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:send
+    methods: GET
 
-fsb_media_files_index_file_serve_page:
-    path:     /files/serve/{filename}
+fsb_media_files_index_file_force_download_page:
+    path:     /files/force-download/{filename}
     defaults:
-        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:serve
+        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:forceDownload
+    methods: GET
+
+fsb_media_files_index_file_display_page:
+    path:     /files/display/{filename}
+    defaults:
+        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:display
+    methods: GET
 
 fsb_media_files_index_file_stream_page:
     path:     /files/stream/{filename}
     defaults:
         _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:stream
-
-fsb_media_files_index_file_send_page:
-    path:     /files/send/{filename}
-    defaults:
-        _controller: FsbMediaFilesIndexBundle:Front/Pages/Home:send
+    methods: GET

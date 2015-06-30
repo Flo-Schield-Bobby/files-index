@@ -1,5 +1,7 @@
 {% extends 'FsbMediaFilesIndexBundle:Front:base.html.twig' %}
 
+{% trans_default_domain 'files' %}
+
 {% block body_attributes %}{% if is_granted('ROLE_USER') %}class='authenticated'{% endif %}{% endblock %}
 
 {% block head_data %}
@@ -37,11 +39,12 @@
                         {
                             "filename": "{{ file.filename }}",
                             "extension": "{{ file.extension|upper }}",
-                            "filesize": "{{ size }}",
+                            "filesize": "{{ file.size }}",
+                            "size": "{{ size }}",
                             "filetype": "{{ type }}",
                             "iconClass": "{{ iconClass }}",
-                            "previewLink": "{{ path('fsb_media_files_index_file_serve_page', { filename: file.filename }) }}",
-                            "downloadLink": "{{ path('fsb_media_files_index_file_download_page', { filename: file.filename }) }}"
+                            "previewLink": "{{ path('fsb_media_files_index_file_display_page', { filename: file.filename }) }}",
+                            "downloadLink": "{{ path('fsb_media_files_index_file_force_download_page', { filename: file.filename }) }}"
                         }{% if not loop.last %},{% endif %}
                     {% endfor %}
                 ]
@@ -51,21 +54,21 @@
 {% endblock %}
 
 {% block app_container %}
-    <h1 id='page-title'>Partage de fichiers</h1>
-    <p>Visualisez ou téléchargez ce que vous voulez !</p>
+    <h1 id='page-title'>{% trans %}list.header.title{% endtrans %}</h1>
+    <p>{% trans %}list.header.description{% endtrans %}</p>
     {% if files %}
         <div class='table-responsive'>
-            {% raw %}
-                <table class='table table-bordered table-stripped'>
-                    <thead>
-                        <tr>
-                            <th v-on='click: sortBy("type")' v-class='active: sortKey == "type"'>Type <span class='pull-right icon' v-class='reversed["type"] ? "icon-caret-up" : "icon-caret-down"'></span></th>
-                            <th v-on='click: sortBy("name")' v-class='active: sortKey == "name"'>Fichier <span class='pull-right icon' v-class='reversed["name"] ? "icon-caret-up" : "icon-caret-down"'></span></th>
-                            <th>Infos</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id='files-list'>
+            <table class='table table-bordered table-stripped'>
+                <thead>
+                    <tr>
+                        <th v-on='click: sortBy("type")' v-class='active: sortKey == "type"'>{% trans %}list.labels.type{% endtrans %} <span class='pull-right icon' v-class='reversed["type"] ? "icon-caret-up" : "icon-caret-down"'></span></th>
+                        <th v-on='click: sortBy("name")' v-class='active: sortKey == "name"'>{% trans %}list.labels.file{% endtrans %} <span class='pull-right icon' v-class='reversed["name"] ? "icon-caret-up" : "icon-caret-down"'></span></th>
+                        <th>{% trans %}list.labels.infos{% endtrans %}</th>
+                        <th>{% trans %}list.labels.actions{% endtrans %}</th>
+                    </tr>
+                </thead>
+                <tbody id='files-list'>
+                    {% raw %}
                         <tr class='file' v-repeat='file: files | filterBy query in "name" | filterBy type in "type" | orderBy sortKey reversed[sortKey]' v-cloak>
                             <td>
                                 <span class='icon icon-2x {{ file.iconClass }}'></span>
@@ -73,7 +76,7 @@
                             <td>{{ file.name }}</td>
                             <td>Fichier {{ file.extension }} - {{ file.size }}</td>
                             <td>
-                                <a class='btn btn-sm btn-theme-3' href='{{ file.previewLink }}' target='_blank' title='prévisualiser' data-toggle='tooltip' data-placement='bottom'>
+                                <a v-if='file.filesize < (100 * 1000 * 1000)' class='btn btn-sm btn-theme-3' href='{{ file.previewLink }}' target='_blank' title='prévisualiser' data-toggle='tooltip' data-placement='bottom'>
                                     <span class='icon icon-2x icon-eye'></span>
                                 </a>
                                 <a class='btn btn-sm btn-theme-3' href='{{ file.downloadLink }}' title='télécharger' data-toggle='tooltip' data-placement='bottom' data-original-title='télécharger'>
@@ -81,9 +84,9 @@
                                 </a>
                             </td>
                         </tr>
-                    </tbody>
-                </table>
-            {% endraw %}
+                    {% endraw %}
+                </tbody>
+            </table>
         </div>
     {% else %}
         <p class='alert-danger'>{{ error }}</p>

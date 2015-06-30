@@ -1,0 +1,17 @@
+exceptions:
+    files:
+        404: The file '%s' cannot be found.
+
+errors:
+    finder:
+        404: We have a small problem here. A team of highly trained ninjas has been dispatched to deal with the situation.
+
+list:
+    header:
+        title: Files sharing index
+        description: Preview or download whatever you want!
+    labels:
+        type: Type
+        file: File
+        infos: Infos
+        actions: Actions

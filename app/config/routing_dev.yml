@@ -1,7 +1,3 @@
-_fsb_media_filesindex_bundle:
-    resource: "@FsbMediaFilesIndexBundle/Resources/config/routing_dev.yml"
-    prefix:   /
-
 _wdt:
     resource: "@WebProfilerBundle/Resources/config/routing/wdt.xml"
     prefix:   /_wdt

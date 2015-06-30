@@ -6,6 +6,7 @@ use DateTime;
 use SplFileInfo;
 use SplFileObject;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -15,199 +16,204 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class FrontController extends Controller
 {
-    protected $cacheValidity = 300;
-    protected $chunkSize = 128;
+	protected $cacheValidity = 300;
+	protected $chunkSize = 128;
+	protected $temporaryFolder = 'temp/';
 
-    protected function sendFile($filepath, $notFoundMessage = 'File not found')
-    {
-        if (!$this->checkFilePath($filepath)) {
-            throw $this->createNotFoundException($notFoundMessage);
-        }
+	protected function sendFile($filepath, $filename = null)
+	{
+		return $this->prepareBinaryFileResponse($filepath, ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename, true);
+	}
 
-        session_write_close();
+	protected function forceDownloadFile($filepath, $filename = null)
+	{
+		return $this->prepareBinaryFileResponse($filepath, ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
+	}
 
-        $response = new BinaryFileResponse($filepath);
+	protected function displayFile($filepath, $filename = null)
+	{
+		return $this->prepareBinaryFileResponse($filepath, ResponseHeaderBag::DISPOSITION_INLINE, $filename);
+	}
 
-        // Set Response public
-        $response->setPublic();
+	protected function prepareBinaryFileResponse($filepath, $attachment = ResponseHeaderBag::DISPOSITION_INLINE, $filename = null, $fromHttpServer = false)
+	{
+		$file = new SplFileInfo($filepath);
 
-        //
-        // Apache X-Sendfile header
-        // This line should be removed in case the app is :
-        //  - Not running on an apache server
-        //  - Running on an apache server without mod_xsendfile enabled
-        //
-        $response->headers->set('X-Sendfile', $filepath);
-        $response->trustXSendfileTypeHeader();
+		if (!$filename) {
+			$filename = $this->sanitise($file->getFilename());
+		}
 
-        return $response;
-    }
+		$fileSystem = new Filesystem();
 
-    protected function downloadFile($filepath, $filename = null, $notFoundMessage = 'File not found')
-    {
-        if (!$this->checkFilePath($filepath)) {
-            throw $this->createNotFoundException($notFoundMessage);
-        }
+		if (!$fileSystem->exists($filepath)) {
+			throw $this->createNotFoundException(sprintf($this->get('translator')->trans('exceptions.files.404', array(), 'files'), $filename));
+		}
 
-        session_write_close();
+		$temporaryFilepath = $this->temporaryFolder . $filename;
+		$fileSystem->copy($filepath, $temporaryFilepath);
 
-        $file = new SplFileInfo($filepath);
+		session_write_close();
 
-        if (is_null($filename)) {
-            $filename = $file->getFilename();
-        }
+		$response = new BinaryFileResponse($temporaryFilepath);
+		$response->setContentDisposition($attachment, $filename);
 
-        $response = new BinaryFileResponse($filepath);
-        $response->setStatusCode(200);
+		if ($fromHttpServer) {
+			$response->headers->set('X-Sendfile', $filepath);
+			$response->trustXSendfileTypeHeader();
+		} else {
+			$response->deleteFileAfterSend(true);
+		}
 
-        // Set Response public
-        $response->setPublic();
+		return $response;
+	}
 
-        // Manage Response headers
-        $disposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
-        $response->headers->set('Content-Disposition', $disposition);
-        $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Content-Length', $file->getSize());
+	protected function streamFile(Request $request, $filepath, $filename = null)
+	{
+		$file = new SplFileObject($filepath);
 
-        return $response;
-    }
+		if (!$filename) {
+			$filename = $this->sanitise($file->getFilename());
+		}
 
-    protected function serveFile($filepath, $notFoundMessage = 'File not found')
-    {
-        if (!$this->checkFilePath($filepath)) {
-            throw $this->createNotFoundException($notFoundMessage);
-        }
+		if (!$this->checkFilePath($filepath)) {
+			throw $this->createNotFoundException(sprintf($this->get('translator')->trans('exceptions.files.404', array(), 'files'), $filename));
+		}
 
-        session_write_close();
+		session_write_close();
 
-        $response = new BinaryFileResponse($filepath);
-        $response->setPublic();
+		$response = new StreamedResponse();
+		$response->setStatusCode(200);
 
-        return $response;
-    }
+		// Set Response public
+		$response->setPublic();
 
-    protected function streamFile($filepath, $filename = null, $notFoundMessage = 'File not found')
-    {
-        if (!$this->checkFilePath($filepath)) {
-            throw $this->createNotFoundException($notFoundMessage);
-        }
+		// Manage Response headers
+		$contentDisposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
+		$response->headers->set('Content-Disposition', $contentDisposition);
+		$response->headers->set('Content-Type', 'application/octet-stream');
+		$response->headers->set('Accept-Ranges', 'bytes');
 
-        session_write_close();
+		// Prepare range [default to whole content file]
+		$rangeMin = 0;
+		$rangeMax = $file->getSize() - 1;
+		$rangeStart = $rangeMin;
+		$rangeEnd = $rangeMax;
 
-        $file = new SplFileObject($filepath);
+		$httpRange = $request->server->get('HTTP_RANGE');
 
-        if (is_null($filename)) {
-            $filename = $file->getFilename();
-        }
+		// Manage HTTP_RANGE if provided
+		if ($httpRange) {
+			$matches = array();
+			$isStatisfiableRange = true;
 
-        $request = $this->getRequest();
+			if (preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $httpRange)) {
+				list($size_unit, $range) = explode('=', $httpRange, 2);
 
-        $response = new StreamedResponse();
-        $response->setStatusCode(200);
+				// Control size_unit
+				if ($size_unit === 'bytes') {
+					// Unvalid multiple ranges
+					if (strpos($range, ',') === false) {
+						list($rangeStart, $rangeEnd) = explode('-', $range, 2);
 
-        // Set Response public
-        $response->setPublic();
+						$rangeEnd = min($rangeEnd, $rangeMax);
 
-        // Manage Response headers
-        $contentDisposition = $response->headers->makeDisposition(ResponseHeaderBag::DISPOSITION_ATTACHMENT, $filename);
-        $response->headers->set('Content-Disposition', $contentDisposition);
-        $response->headers->set('Content-Type', 'application/octet-stream');
-        $response->headers->set('Accept-Ranges', 'bytes');
+						if ($rangeStart <= $rangeEnd) {
+							// Manage Range
+							if ($file->fseek($rangeStart) < 0) {
+								$response = new Response();
+								$response->setPublic();
 
-        // Prepare range [default to whole content file]
-        $rangeMin = 0;
-        $rangeMax = $file->getSize() - 1;
-        $rangeStart = $rangeMin;
-        $rangeEnd = $rangeMax;
+								$response->setStatusCode(500);
+								$response->setContent('An error has occured, the file cannot be seeked.');
 
-        $httpRange = $request->server->get('HTTP_RANGE');
+								return $response;
+							}
 
-        // Manage HTTP_RANGE if provided
-        if ($httpRange) {
-            $matches = array();
-            $isStatisfiableRange = true;
+							$response->setStatusCode(206);
+							$response->headers->set('Content-Range', 'bytes ' . $rangeStart . '-' . $rangeEnd . '/' . $file->getSize());
+							$response->headers->set('Content-Length', $rangeEnd + 1 - $rangeStart);
+						} else {
+							$isStatisfiableRange = false;
+						}
+					} else {
+						$isStatisfiableRange = false;
+					}
+				} else {
+					$isStatisfiableRange = false;
+				}
+			} else {
+				$isStatisfiableRange = false;
+			}
 
-            if (preg_match('/^bytes=((\d*-\d*,? ?)+)$/', $httpRange)) {
-                list($size_unit, $range) = explode('=', $httpRange, 2);
+			if (!$isStatisfiableRange) {
+				$response = new Response();
+				$response->setPublic();
 
-                // Control size_unit
-                if ($size_unit === 'bytes') {
-                    // Unvalid multiple ranges
-                    if (strpos($range, ',') === false) {
-                        list($rangeStart, $rangeEnd) = explode('-', $range, 2);
+				$response->setStatusCode(416);
+				$response->headers->set('Content-Range', 'bytes */' . $file->getSize());
 
-                        $rangeEnd = min($rangeEnd, $rangeMax);
+				return $response;
+			}
+		} else {
+			$response->headers->set('Content-Length', $file->getSize());
+		}
 
-                        if ($rangeStart <= $rangeEnd) {
-                            // Manage Range
-                            if ($file->fseek($rangeStart) < 0) {
-                                $response = new Response();
-                                $response->setPublic();
+		// Prepare Response then send headers
+		$response->prepare($request);
+		$response->sendHeaders();
 
-                                $response->setStatusCode(500);
-                                $response->setContent('An error has occured, the file cannot be seeked.');
+		$chunkSize = $this->chunkSize;
 
-                                return $response;
-                            }
-                            
-                            $response->setStatusCode(206);
-                            $response->headers->set('Content-Range', 'bytes ' . $rangeStart . '-' . $rangeEnd . '/' . $file->getSize());
-                            $response->headers->set('Content-Length', $rangeEnd + 1 - $rangeStart);
-                        } else {
-                            $isStatisfiableRange = false;
-                        }
-                    } else {
-                        $isStatisfiableRange = false;
-                    }
-                } else {
-                    $isStatisfiableRange = false;
-                }
-            } else {
-                $isStatisfiableRange = false;
-            }
+		$response->setCallback(function () use ($file, $chunkSize, $rangeEnd) {
 
-            if (!$isStatisfiableRange) {
-                $response = new Response();
-                $response->setPublic();
+			while (!($file->eof()) && (($offset = $file->ftell()) < $rangeEnd)) {
+				set_time_limit(0);
 
-                $response->setStatusCode(416);
-                $response->headers->set('Content-Range', 'bytes */' . $file->getSize());
+				if ($offset + $chunkSize > $rangeEnd) {
+					$chunkSize = $rangeEnd + 1 - $offset;
+				}
 
-                return $response;
-            }
-        } else {
-            $response->headers->set('Content-Length', $file->getSize());
-        }
+				echo $file->fread($chunkSize);
+			}
 
-        // Prepare Response then send headers
-        $response->prepare($request);
-        $response->sendHeaders();
+			// Close the file handler
+			$file = null;
+		});
 
-        $chunkSize = $this->chunkSize;
+		$response->sendContent();
+	}
 
-        $response->setCallback(function () use ($file, $chunkSize, $rangeEnd) {
+	protected function checkFilePath($filepath)
+	{
+		$fs = new Filesystem();
 
-            while (!($file->eof()) && (($offset = $file->ftell()) < $rangeEnd)) {
-                set_time_limit(0);
+		return $fs->exists($filepath);
+	}
 
-                if ($offset + $chunkSize > $rangeEnd) {
-                    $chunkSize = $rangeEnd + 1 - $offset;
-                }
+	protected function sanitise($string)
+	{
+		if (!empty($characters)) {
+			$string = str_replace((array) $characters, ' ', $string);
+		}
 
-                echo $file->fread($chunkSize);
-            }
+		$sanitisedString = trim($string);
 
-            // Close the file handler
-            $file = null;
-        });
+		$sanitisedString = iconv('UTF-8', 'ASCII//TRANSLIT', $sanitisedString);
+		$sanitisedString = str_replace("'", ' ', $sanitisedString);
 
-        $response->sendContent();
-    }
+		$sanitisedString = preg_replace('/[áàâäāãå]/mi', 'a', $sanitisedString);
+		$sanitisedString = preg_replace('/[éèêëēėę]/mi', 'e', $sanitisedString);
+		$sanitisedString = preg_replace('/[íìîïī]/mi', 'i', $sanitisedString);
+		$sanitisedString = preg_replace('/[óòôöōø]/mi', 'o', $sanitisedString);
+		$sanitisedString = preg_replace('/[úùûüū]/mi', 'u', $sanitisedString);
+		$sanitisedString = preg_replace('/[çćč]/mi', 'u', $sanitisedString);
+		$sanitisedString = preg_replace('/[ñń]/mi', 'n', $sanitisedString);
+		$sanitisedString = preg_replace('/[ÿ]/mi', 'y', $sanitisedString);
+		$sanitisedString = preg_replace('/[\/_|+ -*\`\"]/mi', '-', $sanitisedString);
+		$sanitisedString = preg_replace('/[^a-zA-Z0-9\/_|+.-]/mi', '', $sanitisedString);
 
-    protected function checkFilePath($filepath)
-    {
-        $fs = new Filesystem();
+		$sanitisedString = strtolower(filter_var($sanitisedString, FILTER_SANITIZE_URL));
 
-        return $fs->exists($filepath);
-    }
+		return $sanitisedString;
+	}
 }

@@ -15,7 +15,8 @@ window.addEventListener('load', function (event) {
                     this.files.$set(index, {
                         name: file.filename,
                         extension: file.extension,
-                        size: file.filesize,
+                        filesize: file.filesize,
+                        size: file.size,
                         type: file.filetype,
                         iconClass: file.iconClass,
                         previewLink: file.previewLink,
